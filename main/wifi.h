@@ -3,4 +3,5 @@
 
 
 
+int wifiTest();
 int sendNewMailNotif();

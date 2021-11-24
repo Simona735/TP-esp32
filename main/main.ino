@@ -1,7 +1,7 @@
 
 // jadro programu, obsahuje hlavny cyklus
 
-
+#include <Arduino.h>
 #include "bluetooth.h"
 #include "saveload.h"
 #include "settings.h"
@@ -9,15 +9,19 @@
 #include "ultra.h"
 
 
-DeviceConfigs TPCFG;
+
 
 
 void setup() {
   if(!loadConfig()){
     firstConfig();
   }
-  ultraInit();
-
+  
+  pinInit();
+  
+  ultraCheck();
+  wifiTest();
+  
 
 
   

@@ -1,8 +1,9 @@
 
-// ukladanie a nacitavanie z a do SD karty
+// ukladanie a nacitavanie dat, inicializacia po starte
 
+#include <Arduino.h>
 #include "saveload.h"
-
+#include "settings.h"
 
 
 int loadConfig(){
@@ -15,4 +16,10 @@ int saveConfig(){
 	// TODO
 	
 	return 0;
+}
+
+int pinInit(){
+  pinMode(TPCFG.iUltraTrigPin, OUTPUT);
+  pinMode(TPCFG.iUltraEchoPin, INPUT);
+  return 1;
 }
