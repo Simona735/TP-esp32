@@ -8,5 +8,6 @@ struct WifiVals{
 
 extern WifiVals WifiV;
 
+int wifiConnect();
 int wifiTest();
 int sendNewMailNotif();

@@ -10,8 +10,9 @@ struct DeviceConfigs{
 	int iUltraCheckIntervalMS;					//doba spanku medzi kontrolou posty
 	int iUltraExtraChecks;						//kolko krat sa pri detekcii posty kontroluje navyse na zabranenie falosnych poplachov
 	int iUltraExtraChecksIntervalMS;			//cas medzi extra kontrolami
-	int iUltraTrigPin = 13;
-  int iUltraEchoPin = 15;
+	int iUltraTrigPin;
+  int iUltraEchoPin;
+  float fUltraTolerance;              //tolerancia/citlivost ultrazvukoveho senzora, mensie znamena citlivejsie, minimum/default = 0
   //char sWifiSSID[WIFI_CRED_LENGTH];  // SSID (meno) WiFi
   //char sWifiPassword[WIFI_CRED_LENGTH];  // heslo WiFi
   String sWifiSSID;  // SSID (meno) WiFi
@@ -26,3 +27,5 @@ struct DeviceConfigs{
 };
 
 extern DeviceConfigs TPCFG;
+
+void setDefaults();

@@ -14,6 +14,8 @@
 
 void setup() {
 
+  setDefaults();
+
   #if COMPILEDEBUG
   Serial.begin(9600);
   #endif
@@ -26,7 +28,10 @@ void setup() {
   pinInit();
   
   ultraCheck();
-  wifiTest();
+  if(!wifiConnect()){
+    //pripojenie wifi zlyhalo
+    Serial.println("wifi connection error");
+  }
   
 
 

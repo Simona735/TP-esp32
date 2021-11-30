@@ -23,7 +23,7 @@ float ultraMeasure(){
 }
 
 int ultraCheck(){
-	if(ultraMeasure() < UltraV.fDistEmptyCM){
+	if((ultraMeasure() + TPCFG.fUltraTolerance) < UltraV.fDistEmptyCM){
     return 1;
 	}
 	else{
