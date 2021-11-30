@@ -18,6 +18,12 @@ int saveConfig(){
 	return 0;
 }
 
+int wipeSavedConfig(){
+  // TODO
+
+  return 0;
+}
+
 int pinInit(){
   pinMode(TPCFG.iUltraTrigPin, OUTPUT);
   pinMode(TPCFG.iUltraEchoPin, INPUT);

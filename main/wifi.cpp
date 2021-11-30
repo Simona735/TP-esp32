@@ -7,6 +7,7 @@
 #include "settings.h"
 
 
+
 #define WIFI_RETRY_CON_DELAY 200
 #define WIFI_MAX_CONNECT_ATTEMPTS 20
 
@@ -30,6 +31,28 @@ int wifiConnect(){
 }
 
 
+String wifiHTTPGet(String url){
+  if(WiFi.status()== WL_CONNECTED){
+      HTTPClient http;
+      String outstr;
+
+      http.begin(url.c_str());
+      
+      int httpResponseCode = http.GET();
+      
+      if (httpResponseCode>0) {
+        outstr = http.getString();
+      }
+      else {
+        http.end();
+        outstr = "HTTP Error";
+        
+      }
+      http.end();
+      return outstr;
+    }
+    return "wifi not connected";
+}
 
 
 

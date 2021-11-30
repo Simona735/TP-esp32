@@ -23,6 +23,7 @@ void setup() {
   
   if(!loadConfig()){
     firstConfig();
+    ultraSetEmpty();
   }
   
   pinInit();
@@ -31,6 +32,7 @@ void setup() {
   if(!wifiConnect()){
     //pripojenie wifi zlyhalo
     Serial.println("wifi connection error");
+    
   }
   
 

@@ -9,5 +9,5 @@ struct WifiVals{
 extern WifiVals WifiV;
 
 int wifiConnect();
-int wifiTest();
+String wifiHTTPGet(String url);
 int sendNewMailNotif();

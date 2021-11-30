@@ -5,4 +5,5 @@
 
 int loadConfig();
 int saveConfig();
+int wipeSavedConfig();
 int pinInit();
