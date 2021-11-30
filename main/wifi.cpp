@@ -1,7 +1,13 @@
 
 // funkcie na komunikaciu cez wifi a s firebase-om
 
+#include <WiFi.h>
+#include <HTTPClient.h>
 #include "wifi.h"
+#include "settings.h"
+
+
+WifiVals WifiV;
 
 int wifiTest(){
   // TODO

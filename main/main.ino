@@ -8,11 +8,17 @@
 #include "wifi.h"
 #include "ultra.h"
 
-
+#define COMPILEDEBUG 1
 
 
 
 void setup() {
+
+  #if COMPILEDEBUG
+  Serial.begin(9600);
+  #endif
+
+  
   if(!loadConfig()){
     firstConfig();
   }
