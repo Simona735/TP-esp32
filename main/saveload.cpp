@@ -5,6 +5,7 @@
 #include "saveload.h"
 #include "settings.h"
 #include <Preferences.h>
+#include <nvs_flash.h>
 
 
 #define NVSNAME "MAILBOX"
@@ -12,6 +13,7 @@
 Preferences NVS;
 
 // nazvy hodnot (kluce) sa asi ukladaju do pamate tiez, tak su pouzite len kratke nazvy
+// nazvy a hodnoty by bolo dobre dat ako #define v separatnom hlavickovom subore
 
 int checkLoadedConfig(){
   if(
@@ -32,6 +34,7 @@ int checkLoadedConfig(){
 
 int loadConfig(){
 	NVS.begin(NVSNAME, true);
+ 
   TPCFG.iUltraCheckIntervalMS = NVS.getInt("UCI", -1);
   TPCFG.iUltraExtraChecks = NVS.getInt("UEC", -1);
   TPCFG.iUltraExtraChecksIntervalMS = NVS.getInt("UECI", -1);
@@ -41,22 +44,39 @@ int loadConfig(){
   TPCFG.sWifiSSID = NVS.getString("WS", "-1");
   TPCFG.sWifiPassword = NVS.getString("WP", "-1");
   TPCFG.sServerName = NVS.getString("SN", "-1");
+  
   NVS.end();
 	return checkLoadedConfig();
 }
 
 int saveConfig(){
 	NVS.begin(NVSNAME, false);
-  //TODO
+  
+  NVS.putInt("UCI", TPCFG.iUltraCheckIntervalMS);
+  NVS.putInt("UEC", TPCFG.iUltraExtraChecks);
+  NVS.putInt("UECI", TPCFG.iUltraExtraChecksIntervalMS);
+  NVS.putInt("UTP", TPCFG.iUltraTrigPin);
+  NVS.putInt("UEP", TPCFG.iUltraEchoPin);
+  NVS.putFloat("UT", TPCFG.fUltraTolerance);
+  NVS.putString("WS", TPCFG.sWifiSSID);
+  NVS.putString("WP", TPCFG.sWifiPassword);
+  NVS.putString("SN", TPCFG.sServerName);
+  
   NVS.end();
-	return 0;
+	return 1;
 }
 
-int wipeSavedConfig(){
+int eraseSavedConfig(){
   NVS.begin(NVSNAME, false);
   NVS.clear();
   NVS.end();
-  return 0;
+  return 1;
+}
+
+int wipeFlash(){
+  nvs_flash_erase();
+  nvs_flash_init();
+  return 1;
 }
 
 int pinInit(){

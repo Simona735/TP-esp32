@@ -9,5 +9,6 @@ extern Preferences NVS;
 
 int loadConfig();
 int saveConfig();
-int wipeSavedConfig();
+int eraseSavedConfig();
+int wipeFlash();
 int pinInit();
