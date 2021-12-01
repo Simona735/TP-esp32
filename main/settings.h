@@ -27,5 +27,7 @@ struct DeviceConfigs{
 };
 
 extern DeviceConfigs TPCFG;
+//extern String TPCFGNames;
+//extern String TPCFGVals;
 
 void setDefaults();

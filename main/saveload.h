@@ -1,6 +1,10 @@
 
 // ukladanie a nacitavanie z a do SD karty
 
+#include <Preferences.h>
+
+
+extern Preferences NVS;
 
 
 int loadConfig();
