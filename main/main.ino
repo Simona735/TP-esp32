@@ -56,6 +56,11 @@ void loop() {
       sendNewMailNotif();
     }
   }
-    
+
+
+  //  ----   TEST     -----------------------------
+  FBSetFloat("/database/id_0/UI_sound/senzor_0", ultraMeasure());
+
+  
   delay(TPCFG.iUltraCheckIntervalMS);  // vymenit za low power mod
 }
