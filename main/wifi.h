@@ -20,6 +20,7 @@ String wifiHTTPGet(String url);
 int FBInit();
 int FBConnect();
 int FBStatus();         //vrati stav pripojenia s FB, 0 == OK
+String FBLastError();
 bool FBSetBool(const char* path, bool input);
 bool FBSetInt(const char* path, int input);
 bool FBSetFloat(const char* path, float input);

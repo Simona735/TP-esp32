@@ -92,6 +92,11 @@ int FBStatus(){
   }
 }
 
+String FBLastError(){
+  return FBDATA.errorReason();
+}
+
+
 bool FBSetBool(const char* path, bool input){
   return Firebase.RTDB.setBool(&FBDATA, path, input);
 }
@@ -117,8 +122,38 @@ bool FBSetString(const char* path, const char* str){
 }
 
 bool FBSetJson(const char* path, FirebaseJson json){
-  return Firebase.RTDB.set(&FBDATA, path, &json);
+  return Firebase.RTDB.setJSON(&FBDATA, path, &json);
 }
+
+bool FBSetTimestampNow(const char* path){
+  return Firebase.RTDB.setTimestamp(&FBDATA, path);
+}
+
+
+bool FBGetBool(const char* path, bool* target){
+  return Firebase.RTDB.getBool(&FBDATA, path, target);
+}
+
+bool FBGetInt(const char* path, int* target){
+  return Firebase.RTDB.getInt(&FBDATA, path, target);
+}
+
+bool FBGetFloat(const char* path, float* target){
+  return Firebase.RTDB.getFloat(&FBDATA, path, target);
+}
+
+bool FBGetDouble(const char* path, double* target){
+  return Firebase.RTDB.getDouble(&FBDATA, path, target);
+}
+
+bool FBGetString(const char* path, String* target){
+  return Firebase.RTDB.getString(&FBDATA, path, target);
+}
+
+bool FBGetJson(const char* path, FirebaseJson* target){
+  return Firebase.RTDB.getJSON(&FBDATA, path, target);
+}
+
 
 int sendNewMailNotif(){
 	// TODO

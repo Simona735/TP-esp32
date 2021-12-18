@@ -34,6 +34,9 @@ void setup() {
     Serial.println("wifi connection error");
     
   }
+
+  FBInit();
+  FBConnect();
   
 
 
