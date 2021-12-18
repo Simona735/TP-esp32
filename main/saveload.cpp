@@ -20,12 +20,13 @@ int checkLoadedConfig(){
     TPCFG.iUltraCheckIntervalMS == -1 ||
     TPCFG.iUltraExtraChecks == -1 ||
     TPCFG.iUltraExtraChecksIntervalMS == -1 ||
-    TPCFG.iUltraTrigPin == -1 ||
-    TPCFG.iUltraEchoPin == -1 ||
     TPCFG.fUltraTolerance == -1 ||
     TPCFG.sWifiSSID == "-1" ||
     TPCFG.sWifiPassword == "-1" ||
-    TPCFG.sServerName == "-1"
+    TPCFG.sFBKey == "-1" ||
+    TPCFG.sFBURL == "-1" ||
+    TPCFG.sFBMail == "-1" ||
+    TPCFG.sFBPassword == "-1"
   ){
     return 0;
   }
@@ -38,12 +39,13 @@ int loadConfig(){
   TPCFG.iUltraCheckIntervalMS = NVS.getInt("UCI", -1);
   TPCFG.iUltraExtraChecks = NVS.getInt("UEC", -1);
   TPCFG.iUltraExtraChecksIntervalMS = NVS.getInt("UECI", -1);
-  TPCFG.iUltraTrigPin = NVS.getInt("UTP", -1);
-  TPCFG.iUltraEchoPin = NVS.getInt("UEP", -1);
   TPCFG.fUltraTolerance = NVS.getFloat("UT", -1);
   TPCFG.sWifiSSID = NVS.getString("WS", "-1");
   TPCFG.sWifiPassword = NVS.getString("WP", "-1");
-  TPCFG.sServerName = NVS.getString("SN", "-1");
+  TPCFG.sFBKey = NVS.getString("FBK", "-1");
+  TPCFG.sFBURL = NVS.getString("FBU", "-1");
+  TPCFG.sFBMail = NVS.getString("FBM", "-1");
+  TPCFG.sFBPassword = NVS.getString("FBP", "-1");
   
   NVS.end();
 	return checkLoadedConfig();
@@ -55,12 +57,13 @@ int saveConfig(){
   NVS.putInt("UCI", TPCFG.iUltraCheckIntervalMS);
   NVS.putInt("UEC", TPCFG.iUltraExtraChecks);
   NVS.putInt("UECI", TPCFG.iUltraExtraChecksIntervalMS);
-  NVS.putInt("UTP", TPCFG.iUltraTrigPin);
-  NVS.putInt("UEP", TPCFG.iUltraEchoPin);
   NVS.putFloat("UT", TPCFG.fUltraTolerance);
   NVS.putString("WS", TPCFG.sWifiSSID);
   NVS.putString("WP", TPCFG.sWifiPassword);
-  NVS.putString("SN", TPCFG.sServerName);
+  NVS.putString("FBK", TPCFG.sFBKey);
+  NVS.putString("FBU", TPCFG.sFBURL);
+  NVS.putString("FBM", TPCFG.sFBMail);
+  NVS.putString("FBP", TPCFG.sFBPassword);
   
   NVS.end();
 	return 1;
@@ -76,11 +79,5 @@ int eraseSavedConfig(){
 int wipeFlash(){
   nvs_flash_erase();
   nvs_flash_init();
-  return 1;
-}
-
-int pinInit(){
-  pinMode(TPCFG.iUltraTrigPin, OUTPUT);
-  pinMode(TPCFG.iUltraEchoPin, INPUT);
   return 1;
 }

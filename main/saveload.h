@@ -11,4 +11,3 @@ int loadConfig();
 int saveConfig();
 int eraseSavedConfig();
 int wipeFlash();
-int pinInit();

@@ -12,10 +12,7 @@
 
 #define WIFI_RETRY_CON_DELAY 200
 #define WIFI_MAX_CONNECT_ATTEMPTS 20
-#define FB_API_KEY "AIzaSyBnvv9CnwggizzoOVf7Pj3-IO_Tv9sMKlo"
-#define FB_DATABASE_URL "https://timovy-projekt-97069-default-rtdb.europe-west1.firebasedatabase.app/" 
-#define FB_USER_EMAIL "acoak@hhh.ck"
-#define FB_USER_PASSWORD "999999"
+
 
 
 WifiVals WifiV;
@@ -65,11 +62,11 @@ String wifiHTTPGet(String url){
 }
 
 int FBInit(){
-  FBCFG.api_key = FB_API_KEY;
-  FBCFG.database_url = FB_DATABASE_URL;
+  FBCFG.api_key = TPCFG.sFBKey;
+  FBCFG.database_url = TPCFG.sFBURL;
   FBCFG.token_status_callback = tokenStatusCallback;
-  FBAUTH.user.email = FB_USER_EMAIL;
-  FBAUTH.user.password = FB_USER_PASSWORD;
+  FBAUTH.user.email = TPCFG.sFBMail;
+  FBAUTH.user.password = TPCFG.sFBPassword;
   return 1;
 }
 

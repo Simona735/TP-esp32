@@ -13,12 +13,12 @@ void ultraSetEmpty(){
 }
 
 float ultraMeasure(){
-  digitalWrite(TPCFG.iUltraTrigPin, LOW);
+  digitalWrite(TRIGPIN1, LOW);
   delayMicroseconds(10);
-  digitalWrite(TPCFG.iUltraTrigPin, HIGH);
+  digitalWrite(TRIGPIN1, HIGH);
   delayMicroseconds(10);
-  digitalWrite(TPCFG.iUltraTrigPin, LOW);
-  return SOUND_SPEED * pulseIn(TPCFG.iUltraEchoPin, HIGH);
+  digitalWrite(TRIGPIN1, LOW);
+  return SOUND_SPEED * pulseIn(ECHOPIN1, HIGH);
   
 }
 
