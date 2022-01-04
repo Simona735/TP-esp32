@@ -5,9 +5,19 @@
 #include <BLEUtils.h>
 #include <BLEServer.h>
 
-extern BLEServer *pServer;
-extern BLEService *pService;
-extern BLECharacteristic *pCharacteristic;
-extern BLEAdvertising *pAdvertising;
 
+#define MAXBLECHARACTERISTICS 30
+
+
+struct TPBLEVals{
+  BLEServer *pServer;
+  BLEService *pService;
+  BLECharacteristic *pCharacteristics[MAXBLECHARACTERISTICS];
+  int iNumCharacteristics;
+  BLEAdvertising *pAdvertising;
+};
+
+int initBLE(char* sServUUID);
+int addCharBLE(bool bRW, char* sCharUUID, char* sVal, BLECharacteristicCallbacks* oCallback);
+int startBLE();
 int firstConfig();
