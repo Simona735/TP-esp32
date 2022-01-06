@@ -2,14 +2,18 @@
 // nastavenia
 
 #include <Arduino.h>
-
+#include "settingsDefines.h"
 
 
 // natvrdo nastavene hodnoty
 #define TRIGPIN1 13
 #define ECHOPIN1 15
 #define WIFI_CRED_LENGTH 30
-
+#define NVSNAME "MAILBOX"
+#define SOUND_SPEED 0.017
+#define WIFI_RETRY_CON_DELAY 200
+#define WIFI_MAX_CONNECT_ATTEMPTS 20
+#define SERVICE_UUID "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
 
 
 struct DeviceConfigs{

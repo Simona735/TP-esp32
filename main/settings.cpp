@@ -26,35 +26,6 @@ void setDefaultsFB(){
   TPCFG.sFBPassword = "999999";
 }
 
-/*
- 
-// tieto dva zoznamy su pre alternativny sposob nacitavania/ukladania dat z/do NVS, asi to nepouzijem , zatial to tu nechavam  -Alexander
- 
-String TPCFGNames[]={
-  "iUltraCheckIntervalMS",
-  "iUltraExtraChecks",
-  "iUltraExtraChecksIntervalMS",
-  "iUltraTrigPin",
-  "iUltraEchoPin",
-  "fUltraTolerance",
-  "sWifiSSID",
-  "sWifiPassword",
-  "sServerName"
-}
-
-void* TPCFGVals[]={
-  TPCFG.iUltraCheckIntervalMS&,
-  TPCFG.iUltraExtraChecks&,
-  TPCFG.iUltraExtraChecksIntervalMS&,
-  TPCFG.iUltraTrigPin&,
-  TPCFG.iUltraEchoPin&,
-  TPCFG.fUltraTolerance&,
-  TPCFG.sWifiSSID&,
-  TPCFG.sWifiPassword&,
-  TPCFG.sServerName&
-}
-*/
-
 int pinInit(){
   pinMode(TRIGPIN1, OUTPUT);
   pinMode(ECHOPIN1, INPUT);

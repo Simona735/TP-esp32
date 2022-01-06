@@ -6,7 +6,8 @@
 
 extern Preferences NVS;
 
-
+int checkLoadedConfig();
+int checkLoadedConfigDiag();
 int loadConfig();
 int saveConfig();
 int eraseSavedConfig();

@@ -8,21 +8,22 @@
 #include "wifi.h"
 #include "ultra.h"
 
-#define COMPILEDEBUG 1
+
+#define TPCOMPILEDEBUG
 
 
 
 void setup() {
 
-  setDefaults();
+  //setDefaults(); setDefaultsFB();
 
-  #if COMPILEDEBUG
+  #ifdef TPCOMPILEDEBUG
   Serial.begin(9600);
   #endif
 
   
   if(!loadConfig()){
-    firstConfig();
+    blueConfig();
     ultraSetEmpty();
   }
   
@@ -31,7 +32,10 @@ void setup() {
   ultraCheck();
   if(!wifiConnect()){
     //pripojenie wifi zlyhalo
+    #ifdef TPCOMPILEDEBUG
     Serial.println("wifi connection error");
+    #endif
+
     
   }
 

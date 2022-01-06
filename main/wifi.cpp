@@ -10,10 +10,6 @@
 #include "settings.h"
 
 
-#define WIFI_RETRY_CON_DELAY 200
-#define WIFI_MAX_CONNECT_ATTEMPTS 20
-
-
 
 WifiVals WifiV;
 
