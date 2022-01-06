@@ -24,4 +24,7 @@ int addCharBLE(bool bRW, char* sCharUUID, String sVal, BLECharacteristicCallback
 int addCharBLE(bool bRW, char* sCharUUID, int iVal, BLECharacteristicCallbacks* oCallback);
 int addCharBLE(bool bRW, char* sCharUUID, float fVal, BLECharacteristicCallbacks* oCallback);
 int startBLE();
+int stopBLE();
+int showBLE();
+int hideBLE();
 int blueConfig();

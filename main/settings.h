@@ -2,7 +2,6 @@
 // nastavenia
 
 #include <Arduino.h>
-#include "settingsDefines.h"
 
 
 // natvrdo nastavene hodnoty

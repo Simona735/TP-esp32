@@ -77,6 +77,7 @@ int initBLE(char* sServUUID){
   TPBLEV.pServer = BLEDevice::createServer();
   TPBLEV.pService = TPBLEV.pServer->createService(sServUUID);
   TPBLEV.iNumCharacteristics = 0;
+  TPBLEV.pAdvertising = TPBLEV.pServer->getAdvertising();
   return 1;
 }
 
@@ -150,11 +151,23 @@ int addCharBLE(bool bRW, char* sCharUUID, float fVal, BLECharacteristicCallbacks
 
 int startBLE(){
   TPBLEV.pService->start();
-  TPBLEV.pAdvertising = TPBLEV.pServer->getAdvertising();
+  return 1;
+}
+
+int stopBLE(){
+  TPBLEV.pService->stop();
+  return 1;
+}
+
+int showBLE(){
   TPBLEV.pAdvertising->start();
   return 1;
 }
 
+int hideBLE(){
+  TPBLEV.pAdvertising->stop();
+  return 1;
+}
 
 int blueConfig(){
   initBLE(SERVICE_UUID);
@@ -169,6 +182,7 @@ int blueConfig(){
   addCharBLE(true, "88558ac3-0138-424c-9b4f-460757bcb6ec", TPCFG.sFBMail, new CallbackConfigSaverString(&TPCFG.sFBMail));
   addCharBLE(true, "820aeda2-1d70-42b9-8831-3b515f88d9a2", TPCFG.sFBPassword, new CallbackConfigSaverString(&TPCFG.sFBPassword));
   startBLE();
+  showBLE();
   for(int i = 0; i < 10; i++){
     delay(1000);
   }
