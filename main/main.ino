@@ -9,9 +9,15 @@
 #include "ultra.h"
 #include <rom/rtc.h>
 
+
+// zakomentovanie nasledujuceho riadku zkompiluje program bez debugovacich vypisov na seriovom vystupe pomocou makra serialDBOut("")
 #define TPCOMPILEDEBUG
 
-
+#ifdef TPCOMPILEDEBUG
+#define serialDBOut(a) Serial.println(a)
+#else
+#define serialDBOut(a)
+#endif
 
 void setup() {
 
@@ -29,7 +35,7 @@ void setup() {
   {
     // ked sa zariadenie da do spankoveho rezimu, vymaze sa RAM. Premenne sa daju ulozit aj do specialnej pamate ktora toto prezije pomocou RTC_DATA_ATTR, ale tej je malo (asi 8kB) a nedaju sa pouzit String a podobne typy ktore dynamicky alokuju pamat pre hodnoty
     if(!loadConfig()){ // nacita nastavenia, ak nastane chyba, zastavi sa
-      sendDeviceFatalError("L1A : Chyba pri nacitani nastaveni");
+      serialDBOut("L1A : Chyba pri nacitani nastaveni");
       esp_deep_sleep(FATAL_ERROR_RESET_TIME * 1000);
       
     }
@@ -51,7 +57,7 @@ void setup() {
   else     // INY RESET
   {
     if(!loadConfig()){
-      sendDeviceFatalError("L1B : Chyba pri nacitani nastaveni");
+      serialDBOut("L1B : Chyba pri nacitani nastaveni");
       esp_deep_sleep(FATAL_ERROR_RESET_TIME * 1000);
     }
   
@@ -75,12 +81,8 @@ void setup() {
     }
     if(i==0){
       if(!wifiConnect()){
-        //pripojenie wifi zlyhalo
-        #ifdef TPCOMPILEDEBUG
-        Serial.println("wifi connection error");
-        #endif
-
-    
+        serialDBOut("pripojenie wifi zlyhalo");
+        
       }
 
       FBInit();
@@ -94,7 +96,7 @@ void setup() {
   //FBSetFloat("/database/id_0/UI_sound/senzor_0", ultraMeasure());   // TEST
 
   
-  
+  serialDBOut("zariadenie zaspalo");
   esp_deep_sleep(TPCFG.iUltraCheckIntervalMS * 1000); // trvanie spanku sa udava v mikrosekundach, premenna je milisekundy
   
 }
