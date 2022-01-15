@@ -8,11 +8,13 @@
 RTC_DATA_ATTR UltraVals UltraV;    // prezije spanok
 
 void ultraSetEmpty(){
-  UltraV.fDistEmptyCM = ultraMeasure();
+  UltraV.fDistEmptyCM1 = ultraMeasure1();
+  UltraV.fDistEmptyCM2 = ultraMeasure2();
+  UltraV.fDistEmptyCM3 = ultraMeasure3();
   return;
 }
 
-float ultraMeasure(){
+float ultraMeasure1(){
   digitalWrite(TRIGPIN1, LOW);
   delayMicroseconds(10);
   digitalWrite(TRIGPIN1, HIGH);
@@ -22,11 +24,49 @@ float ultraMeasure(){
   
 }
 
-int ultraCheck(){
-	if((ultraMeasure() + TPCFG.fUltraTolerance) < UltraV.fDistEmptyCM){
-    return 1;
+float ultraMeasure2(){
+  digitalWrite(TRIGPIN2, LOW);
+  delayMicroseconds(10);
+  digitalWrite(TRIGPIN2, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIGPIN2, LOW);
+  return SOUND_SPEED * pulseIn(ECHOPIN2, HIGH);
+  
+}
+
+float ultraMeasure3(){
+  digitalWrite(TRIGPIN3, LOW);
+  delayMicroseconds(10);
+  digitalWrite(TRIGPIN3, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIGPIN3, LOW);
+  return SOUND_SPEED * pulseIn(ECHOPIN3, HIGH);
+  
+}
+
+bool ultraCheck1(){
+	if((ultraMeasure1() + TPCFG.fUltraTolerance) < UltraV.fDistEmptyCM1){
+    return true;
 	}
 	else{
-    return 0;
+    return false;
 	}
+}
+
+bool ultraCheck2(){
+  if((ultraMeasure2() + TPCFG.fUltraTolerance) < UltraV.fDistEmptyCM2){
+    return true;
+  }
+  else{
+    return false;
+  }
+}
+
+bool ultraCheck3(){
+  if((ultraMeasure3() + TPCFG.fUltraTolerance) < UltraV.fDistEmptyCM3){
+    return true;
+  }
+  else{
+    return false;
+  }
 }

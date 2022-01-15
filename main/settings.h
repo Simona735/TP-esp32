@@ -7,6 +7,10 @@
 // natvrdo nastavene hodnoty
 #define TRIGPIN1 13
 #define ECHOPIN1 15
+#define TRIGPIN2 13
+#define ECHOPIN2 15
+#define TRIGPIN3 13
+#define ECHOPIN3 15
 #define WIFI_CRED_LENGTH 30
 #define NVSNAME "MAILBOX"
 #define SOUND_SPEED 0.017
