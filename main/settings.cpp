@@ -10,7 +10,7 @@ DeviceConfigs TPCFG;
    //predvolene hodnoty
 
 void setDefaults(){
-  TPCFG.iUltraCheckIntervalMS = 10000;          //doba spanku medzi kontrolou posty
+  TPCFG.iUltraCheckIntervalMS = 60000;          //doba spanku medzi kontrolou posty
   TPCFG.iUltraExtraChecks = 4;            //kolko krat sa pri detekcii posty kontroluje navyse na zabranenie falosnych poplachov
   TPCFG.iUltraExtraChecksIntervalMS = 500;      //cas medzi extra kontrolami
   TPCFG.fUltraTolerance = 0;              //tolerancia/citlivost ultrazvukoveho senzora, mensie znamena citlivejsie, minimum/default = 0

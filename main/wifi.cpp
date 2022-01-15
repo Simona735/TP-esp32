@@ -153,3 +153,9 @@ int sendNewMailNotif(){
 	
 	return 0;
 }
+
+int sendDeviceFatalError(char* cause){
+  // TODO
+
+  return 0;
+}

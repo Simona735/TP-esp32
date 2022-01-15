@@ -5,7 +5,7 @@
 #include "settings.h"
 #include "ultra.h"
 
-UltraVals UltraV;
+RTC_DATA_ATTR UltraVals UltraV;    // prezije spanok
 
 void ultraSetEmpty(){
   UltraV.fDistEmptyCM = ultraMeasure();
