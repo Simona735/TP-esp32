@@ -18,6 +18,7 @@
 #define WIFI_MAX_CONNECT_ATTEMPTS 20
 #define SERVICE_UUID "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
 #define FATAL_ERROR_RESET_TIME 3600000
+#define ULTRA_SEQUENCE_DELAY 10
 
 
 struct DeviceConfigs{

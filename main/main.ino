@@ -64,11 +64,11 @@ void setup() {
   
   //---------- JADRO
 
-  if(ultraCheck1() || ultraCheck2() || ultraCheck3()){
+  if(ultraCheckAll()){
     int i;
     for(i=TPCFG.iUltraExtraChecks; i!=0; i--){
       delay(TPCFG.iUltraExtraChecksIntervalMS);
-      if(!(ultraCheck1() || ultraCheck2() || ultraCheck3())){
+      if(!(ultraCheckAll())){
         i=2;
         break;
       }

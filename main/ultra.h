@@ -19,3 +19,4 @@ float ultraMeasure3();
 bool ultraCheck1();
 bool ultraCheck2();
 bool ultraCheck3();
+bool ultraCheckAll();

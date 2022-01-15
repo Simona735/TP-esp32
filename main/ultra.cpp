@@ -9,7 +9,9 @@ RTC_DATA_ATTR UltraVals UltraV;    // prezije spanok
 
 void ultraSetEmpty(){
   UltraV.fDistEmptyCM1 = ultraMeasure1();
+  delay(ULTRA_SEQUENCE_DELAY);
   UltraV.fDistEmptyCM2 = ultraMeasure2();
+  delay(ULTRA_SEQUENCE_DELAY);
   UltraV.fDistEmptyCM3 = ultraMeasure3();
   return;
 }
@@ -69,4 +71,19 @@ bool ultraCheck3(){
   else{
     return false;
   }
+}
+
+bool ultraCheckAll(){
+  if(ultraMeasure1()){
+    return true;
+  }
+  delay(ULTRA_SEQUENCE_DELAY);
+  if(ultraMeasure2()){
+    return true;
+  }
+  delay(ULTRA_SEQUENCE_DELAY);
+  if(ultraMeasure3()){
+    return true;
+  }
+  return false;
 }
