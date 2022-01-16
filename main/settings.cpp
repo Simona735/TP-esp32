@@ -29,5 +29,9 @@ void setDefaultsFB(){
 int pinInit(){
   pinMode(TRIGPIN1, OUTPUT);
   pinMode(ECHOPIN1, INPUT);
+  pinMode(TRIGPIN2, OUTPUT);
+  pinMode(ECHOPIN2, INPUT);
+  pinMode(TRIGPIN3, OUTPUT);
+  pinMode(ECHOPIN3, INPUT);
   return 1;
 }
