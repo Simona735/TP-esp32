@@ -15,6 +15,26 @@ TPBLEVals TPBLEV;
 
 
 // BLE callbacks for wifi connection
+class CallbackStateDescriptor: public BLECharacteristicCallbacks {
+  int* pTarget;
+  public:
+  CallbackStateDescriptor(int* pTar){
+    pTarget = pTar;
+  }
+  void onWrite(BLECharacteristic *pCharacteristic) {
+    *pTarget = atoi(pCharacteristic->getValue().c_str());
+  }
+};
+
+class CallbackCommand: public BLECharacteristicCallbacks {
+  void onWrite(BLECharacteristic *pCharacteristic) {
+    if(pCharacteristic->getValue()=="ERASESETTINGS"){
+      eraseSavedConfig();
+      ESP.restart();
+    }
+  }
+};
+
 class CallbackConfigSaverIntRaw: public BLECharacteristicCallbacks {
   int* pTarget;
   public:
@@ -83,7 +103,7 @@ int initBLE(char* sServUUID){
 
 
 
-int addCharBLE(bool bRW, char* sCharUUID, char* sVal, BLECharacteristicCallbacks* oCallback){
+BLECharacteristic* addCharBLE(bool bRW, char* sCharUUID, char* sVal, BLECharacteristicCallbacks* oCallback){
   if(bRW){
     TPBLEV.pCharacteristics[TPBLEV.iNumCharacteristics] = TPBLEV.pService->createCharacteristic(sCharUUID, BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE);
     TPBLEV.iNumCharacteristics++;
@@ -96,9 +116,10 @@ int addCharBLE(bool bRW, char* sCharUUID, char* sVal, BLECharacteristicCallbacks
     TPBLEV.pCharacteristics[TPBLEV.iNumCharacteristics - 1]->setCallbacks(oCallback);
   }
   TPBLEV.pCharacteristics[TPBLEV.iNumCharacteristics - 1]->setValue(sVal);
+  return TPBLEV.pCharacteristics[TPBLEV.iNumCharacteristics - 1];
 }
 
-int addCharBLE(bool bRW, char* sCharUUID, String sVal, BLECharacteristicCallbacks* oCallback){
+BLECharacteristic* addCharBLE(bool bRW, char* sCharUUID, String sVal, BLECharacteristicCallbacks* oCallback){
   if(bRW){
     TPBLEV.pCharacteristics[TPBLEV.iNumCharacteristics] = TPBLEV.pService->createCharacteristic(sCharUUID, BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE);
     TPBLEV.iNumCharacteristics++;
@@ -111,9 +132,10 @@ int addCharBLE(bool bRW, char* sCharUUID, String sVal, BLECharacteristicCallback
     TPBLEV.pCharacteristics[TPBLEV.iNumCharacteristics - 1]->setCallbacks(oCallback);
   }
   TPBLEV.pCharacteristics[TPBLEV.iNumCharacteristics - 1]->setValue(sVal.c_str());
+  return TPBLEV.pCharacteristics[TPBLEV.iNumCharacteristics - 1];
 }
 
-int addCharBLE(bool bRW, char* sCharUUID, int iVal, BLECharacteristicCallbacks* oCallback){
+BLECharacteristic* addCharBLE(bool bRW, char* sCharUUID, int iVal, BLECharacteristicCallbacks* oCallback){
   if(bRW){
     TPBLEV.pCharacteristics[TPBLEV.iNumCharacteristics] = TPBLEV.pService->createCharacteristic(sCharUUID, BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE);
     TPBLEV.iNumCharacteristics++;
@@ -128,9 +150,10 @@ int addCharBLE(bool bRW, char* sCharUUID, int iVal, BLECharacteristicCallbacks* 
   char sVal[20];
   snprintf(sVal, 20, "%d", iVal);
   TPBLEV.pCharacteristics[TPBLEV.iNumCharacteristics - 1]->setValue(sVal);
+  return TPBLEV.pCharacteristics[TPBLEV.iNumCharacteristics - 1];
 }
 
-int addCharBLE(bool bRW, char* sCharUUID, float fVal, BLECharacteristicCallbacks* oCallback){
+BLECharacteristic* addCharBLE(bool bRW, char* sCharUUID, float fVal, BLECharacteristicCallbacks* oCallback){
   if(bRW){
     TPBLEV.pCharacteristics[TPBLEV.iNumCharacteristics] = TPBLEV.pService->createCharacteristic(sCharUUID, BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE);
     TPBLEV.iNumCharacteristics++;
@@ -145,6 +168,7 @@ int addCharBLE(bool bRW, char* sCharUUID, float fVal, BLECharacteristicCallbacks
   char sVal[20];
   snprintf(sVal, 20, "%f", fVal);
   TPBLEV.pCharacteristics[TPBLEV.iNumCharacteristics - 1]->setValue(sVal);
+  return TPBLEV.pCharacteristics[TPBLEV.iNumCharacteristics - 1];
 }
 
 
@@ -169,8 +193,13 @@ int hideBLE(){
   return 1;
 }
 
-int blueConfig(){
+int blueConfig(int iTimeSecs){
   initBLE(SERVICE_UUID);
+  int iState = 1;
+  
+  BLECharacteristic* opState = addCharBLE(true, "11aa358f-9224-46d9-b0f5-3a7ba1ac651e", 1, new CallbackStateDescriptor(&iState));
+  addCharBLE(true, "0b62f0bc-37b2-4345-973e-3138c37ff4ca", "0", new CallbackCommand());
+  
   addCharBLE(true, "b81b8cac-7dce-4de0-a568-31b4a0b35816", TPCFG.iUltraCheckIntervalMS, new CallbackConfigSaverInt(&TPCFG.iUltraCheckIntervalMS));
   addCharBLE(true, "70510db2-616d-4598-82e8-4efe1f5ad71a", TPCFG.iUltraExtraChecks, new CallbackConfigSaverInt(&TPCFG.iUltraExtraChecks));
   addCharBLE(true, "47865e5e-35f4-4119-a9dd-7cc0d3cd7c7e", TPCFG.iUltraExtraChecksIntervalMS, new CallbackConfigSaverInt(&TPCFG.iUltraExtraChecksIntervalMS));
@@ -181,11 +210,42 @@ int blueConfig(){
   addCharBLE(true, "9c8657d5-7343-4a1d-a5b8-f5acd689c763", TPCFG.sFBURL, new CallbackConfigSaverString(&TPCFG.sFBURL));
   addCharBLE(true, "88558ac3-0138-424c-9b4f-460757bcb6ec", TPCFG.sFBMail, new CallbackConfigSaverString(&TPCFG.sFBMail));
   addCharBLE(true, "820aeda2-1d70-42b9-8831-3b515f88d9a2", TPCFG.sFBPassword, new CallbackConfigSaverString(&TPCFG.sFBPassword));
+  
   startBLE();
   showBLE();
-  for(int i = 0; i < 10; i++){
-    delay(1000);
+  if(iTimeSecs > 0){
+    for(int i = 0; i < iTimeSecs; i++){
+      if(iState==2){
+        saveConfig();
+        opState->setValue("3");
+        delay(3000);
+        hideBLE();
+        stopBLE();
+        return 1;
+      }
+      delay(1000);
+    }
+    loadConfig();
+    return 0;
   }
-  saveConfig();
-	return 1;
+  else{
+    for(int i = 0; i < RESET_BLE_CONFIG_SECONDS_REQUIRED; i++){
+      if(iState==2){
+        saveConfig();
+        opState->setValue("3");
+        delay(3000);
+        hideBLE();
+        stopBLE();
+        return 1;
+      }
+      delay(1000);
+    }
+    opState->setValue("0");
+    delay(3000);
+    hideBLE();
+    stopBLE();
+    esp_deep_sleep_start();
+    return 0;
+  }
+  
 }

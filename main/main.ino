@@ -14,9 +14,9 @@
 #define TPCOMPILEDEBUG
 
 #ifdef TPCOMPILEDEBUG
-#define serialDBOut(a) Serial.println(a)
+#define serialDBOut(a); Serial.println(a);
 #else
-#define serialDBOut(a)
+#define serialDBOut(a);
 #endif
 
 void setup() {
@@ -26,7 +26,7 @@ void setup() {
   
 
   #ifdef TPCOMPILEDEBUG
-  Serial.begin(9600);
+  Serial.begin(115200);
   #endif
 
   
@@ -43,10 +43,14 @@ void setup() {
     pinInit();     // mozno netreba ?
   
   }
-  else if(rtc_get_reset_reason(0)==1)     // STANDARDNY RESET (odpojenie napajania)
+  else if(rtc_get_reset_reason(0)==1 || rtc_get_reset_reason(0)==12)     // STANDARDNY RESET (odpojenie napajania alebo softverovy reset)
   {
-    loadConfig();  // nacita nastavenia
-    blueConfig();  // prijme nove nastavenia cez BLE
+    if(loadConfig()){  // nacita nastavenia
+      blueConfig(RESET_BLE_CONFIG_SECONDS);  // prijme nove nastavenia cez BLE
+    }
+    else{
+      blueConfig(0);  // neexistuju ulozene nastavenia, nutne prijme nove nastavenia cez BLE, inak po case permanentne zaspi (do manualneho restartu)
+    }
     ultraSetEmpty();  // kalibracia
     
   

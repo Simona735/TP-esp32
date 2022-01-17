@@ -19,12 +19,12 @@ struct TPBLEVals{
 };
 
 int initBLE(char* sServUUID);
-int addCharBLE(bool bRW, char* sCharUUID, char* sVal, BLECharacteristicCallbacks* oCallback);
-int addCharBLE(bool bRW, char* sCharUUID, String sVal, BLECharacteristicCallbacks* oCallback);
-int addCharBLE(bool bRW, char* sCharUUID, int iVal, BLECharacteristicCallbacks* oCallback);
-int addCharBLE(bool bRW, char* sCharUUID, float fVal, BLECharacteristicCallbacks* oCallback);
+BLECharacteristic* addCharBLE(bool bRW, char* sCharUUID, char* sVal, BLECharacteristicCallbacks* oCallback);
+BLECharacteristic* addCharBLE(bool bRW, char* sCharUUID, String sVal, BLECharacteristicCallbacks* oCallback);
+BLECharacteristic* addCharBLE(bool bRW, char* sCharUUID, int iVal, BLECharacteristicCallbacks* oCallback);
+BLECharacteristic* addCharBLE(bool bRW, char* sCharUUID, float fVal, BLECharacteristicCallbacks* oCallback);
 int startBLE();
 int stopBLE();
 int showBLE();
 int hideBLE();
-int blueConfig();
+int blueConfig(int iTimeSecs);
