@@ -16,6 +16,11 @@ TPBLEVals TPBLEV;
 
 // BLE callbacks for wifi connection
 class CallbackUniversal: public BLECharacteristicCallbacks {
+  int* piState;
+  public:
+  CallbackUniversal(int* out){
+    piState = out;
+  }
   void onWrite(BLECharacteristic *pCharacteristic) {
     if(pCharacteristic->getValue().compare("0") == 0){
       return;
@@ -55,6 +60,10 @@ class CallbackUniversal: public BLECharacteristicCallbacks {
     if(strcmp(str, "+FRST") == 0){
       eraseSavedConfig();
       ESP.restart();
+      return;
+    }
+    if(strcmp(str, "+CONF") == 0){
+      *piState = 2;
       return;
     }
 
@@ -245,9 +254,9 @@ int blueConfig(int iTimeSecs){
   initBLE(SERVICE_UUID);
   // MTU by malo byt 4*23
   
-  //int iState = 1;
+  int iState = 0;
   
-  BLECharacteristic* opChar = addCharBLE(true, "11aa358f-9224-46d9-b0f5-3a7ba1ac651e", "0", new CallbackUniversal());
+  BLECharacteristic* opChar = addCharBLE(true, "11aa358f-9224-46d9-b0f5-3a7ba1ac651e", "0", new CallbackUniversal(&iState));
   
   //addCharBLE(true, "0b62f0bc-37b2-4345-973e-3138c37ff4ca", "0", new CallbackCommand());
   //addCharBLE(true, "b81b8cac-7dce-4de0-a568-31b4a0b35816", TPCFG.iUltraCheckIntervalMS, new CallbackConfigSaverInt(&TPCFG.iUltraCheckIntervalMS));
@@ -268,6 +277,7 @@ int blueConfig(int iTimeSecs){
     showBLE();
     for(int i = 0; i < iTimeSecs; i++){
       delay(50);
+      if(iState == 2){break;}
     }
     hideBLE();
     stopBLE();
@@ -283,6 +293,7 @@ int blueConfig(int iTimeSecs){
     showBLE();
     for(int i = 0; i < iTimeSecs; i++){
       delay(50);
+      if(iState == 2){break;}
     }
     hideBLE();
     stopBLE();
