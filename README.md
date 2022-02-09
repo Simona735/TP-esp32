@@ -24,8 +24,8 @@ WP;tajneheslo123
 2: Reset vyvolany stlacenim tlacitka, po ktorom sa nepodarilo nacitat nastavenia (neexistuju, prve zapnutie). V tomto pripade je BLE zapnute dlho (10m), a ak zariadnie nastavenia neobdrzi, permanentne zaspi (do manualneho restartu). Appka musi dodat vsetky(!) nastavenia na zozname dole. Nastavovanie treba ukoncit pomocou prikazu +CONF.
 
 Prikazy(BLE):
-"+FRST"		Tovarensky reset. Zmaze vsetko a restartuje zariadenie.
-"+CONF"		Potvrdenie. Da signal ESPcku ze moze predcasne zatvorit BLE a dalej fungovat. Nepovinne
+- "+FRST"		Tovarensky reset. Zmaze vsetko a restartuje zariadenie.
+- "+CONF"		Potvrdenie. Da signal ESPcku ze moze predcasne zatvorit BLE a dalej fungovat. Nepovinne
 
 Nastavenia (BLE):
 - "WS"		string		SSID WiFi
