@@ -19,6 +19,10 @@
 #define serialDBOut(a);
 #endif
 
+
+RTC_DATA_ATTR int iCycle;
+
+
 void setup() {
 
   //-------- STARTUP
@@ -34,14 +38,16 @@ void setup() {
   if(rtc_get_reset_reason(0)==5)    // PREBUDENIE
   {
     // ked sa zariadenie da do spankoveho rezimu, vymaze sa RAM. Premenne sa daju ulozit aj do specialnej pamate ktora toto prezije pomocou RTC_DATA_ATTR, ale tej je malo (asi 8kB) a nedaju sa pouzit String a podobne typy ktore dynamicky alokuju pamat pre hodnoty
-    if(!loadConfig()){ // nacita nastavenia, ak nastane chyba, zastavi sa
-      serialDBOut("L1A : Chyba pri nacitani nastaveni");
-      esp_deep_sleep(FATAL_ERROR_RESET_TIME * 1000);
-      
+    
+    //checkU();   TODO !!!
+    if(iCycle >= ADDITIONAL_TASKS_FREQUENCY){
+      fetchSettings();
+      iCycle = 0;
     }
-  
-    pinInit();     // mozno netreba ?
-  
+    else{
+      iCycle++;
+    }
+    
   }
   else if(rtc_get_reset_reason(0)==1 || rtc_get_reset_reason(0)==12)     // STANDARDNY RESET (odpojenie napajania alebo softverovy reset)
   {
@@ -50,30 +56,42 @@ void setup() {
     }
     else{
       blueConfig(0);  // neexistuju ulozene nastavenia, nutne prijme nove nastavenia cez BLE, inak po case permanentne zaspi (do manualneho restartu)
+      iCycle = 0;
     }
     ultraSetEmpty();  // kalibracia
     
   
-    pinInit();
-  
-    
   }
   else     // INY RESET
   {
     if(!loadConfig()){
       serialDBOut("L1B : Chyba pri nacitani nastaveni");
-      esp_deep_sleep(FATAL_ERROR_RESET_TIME * 1000);
+      esp_deep_sleep(FATAL_ERROR_RESET_TIME);
     }
-  
-    pinInit();
   
     
   }
   
   
   
-  //---------- JADRO
+  
 
+
+  //FBSetFloat("/database/id_0/UI_sound/senzor_0", ultraMeasure());   // TEST
+
+  
+  serialDBOut("zariadenie zaspalo");
+  esp_deep_sleep(TPCFG.iUltraCheckInterval); // trvanie spanku sa udava v mikrosekundach, premenna je milisekundy
+  
+}
+
+void loop() {
+  // ked sa zariadenie zobudi zo spanku, ide zase do setup(), takze loop() je prazdny
+}
+
+
+int checkU(){
+  pinInit();
   if(ultraCheckAll()){
     int i;
     for(i=TPCFG.iUltraExtraChecks; i!=0; i--){
@@ -89,22 +107,14 @@ void setup() {
         
       }
 
+      if(!loadConfig()){
+        serialDBOut("C1 : Chyba pri nacitani nastaveni");
+        esp_deep_sleep(FATAL_ERROR_RESET_TIME);
+      }
+
       FBInit();
       FBConnect();
       sendNewMailNotif();
     }
   }
-
-
-
-  //FBSetFloat("/database/id_0/UI_sound/senzor_0", ultraMeasure());   // TEST
-
-  
-  serialDBOut("zariadenie zaspalo");
-  esp_deep_sleep(TPCFG.iUltraCheckIntervalMS * 1000); // trvanie spanku sa udava v mikrosekundach, premenna je milisekundy
-  
-}
-
-void loop() {
-  // ked sa zariadenie zobudi zo spanku, ide zase do setup(), takze loop() je prazdny
 }

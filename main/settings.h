@@ -17,17 +17,18 @@
 #define WIFI_RETRY_CON_DELAY 200
 #define WIFI_MAX_CONNECT_ATTEMPTS 20
 #define SERVICE_UUID "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
-#define FATAL_ERROR_RESET_TIME 3600000
+#define FATAL_ERROR_RESET_TIME 20000000
 #define ULTRA_SEQUENCE_DELAY 10
 #define RESET_BLE_CONFIG_SECONDS 30
 #define RESET_BLE_CONFIG_SECONDS_REQUIRED 300
+#define ADDITIONAL_TASKS_FREQUENCY 100
 
 
 
 struct DeviceConfigs{
-	int iUltraCheckIntervalMS;					//doba spanku medzi kontrolou posty
+	int iUltraCheckInterval;					//doba spanku medzi kontrolou posty (mikrosekundy)
 	int iUltraExtraChecks;						//kolko krat sa pri detekcii posty kontroluje navyse na zabranenie falosnych poplachov
-	int iUltraExtraChecksIntervalMS;			//cas medzi extra kontrolami
+	int iUltraExtraChecksIntervalMS;			//cas medzi extra kontrolami (milisekundy)
   float fUltraTolerance;              //tolerancia/citlivost ultrazvukoveho senzora, mensie znamena citlivejsie, minimum/default = 0
   //char sWifiSSID[WIFI_CRED_LENGTH];  // SSID (meno) WiFi
   //char sWifiPassword[WIFI_CRED_LENGTH];  // heslo WiFi
@@ -37,7 +38,7 @@ struct DeviceConfigs{
   String sFBURL;
   String sFBMail;
   String sFBPassword;
-  
+  String sFBID;
 
 	
 	
@@ -50,5 +51,6 @@ extern DeviceConfigs TPCFG;
 //extern String TPCFGVals;
 
 void setDefaults();
+void setDefaultsWifi();
 void setDefaultsFB();
 int pinInit();

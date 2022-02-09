@@ -15,6 +15,54 @@ TPBLEVals TPBLEV;
 
 
 // BLE callbacks for wifi connection
+class CallbackUniversal: public BLECharacteristicCallbacks {
+  void onWrite(BLECharacteristic *pCharacteristic) {
+    if(pCharacteristic->getValue().compare("0") == 0){
+      return;
+    }
+    
+    char str[pCharacteristic->getValue().length()+2];
+    strcpy(str, pCharacteristic->getValue().c_str());
+    char* sep = strpbrk(str, ";");
+    *sep = '\0';
+    sep += 1;
+
+    
+    if(strcmp(str, "WS") == 0){
+      TPCFG.sWifiSSID = String(sep);
+      return;
+    }
+    if(strcmp(str, "WP") == 0){
+      TPCFG.sWifiPassword = String(sep);
+      return;
+    }
+    if(strcmp(str, "FBK") == 0){
+      TPCFG.sFBKey = String(sep);
+      return;
+    }
+    if(strcmp(str, "FBM") == 0){
+      TPCFG.sFBMail = String(sep);
+      return;
+    }
+    if(strcmp(str, "FBP") == 0){
+      TPCFG.sFBPassword = String(sep);
+      return;
+    }
+    if(strcmp(str, "FBI") == 0){
+      TPCFG.sFBID = String(sep);
+      return;
+    }
+    if(strcmp(str, "+FRST") == 0){
+      eraseSavedConfig();
+      ESP.restart();
+      return;
+    }
+
+    pCharacteristic->setValue("0");
+    return;
+  }
+};
+
 class CallbackStateDescriptor: public BLECharacteristicCallbacks {
   int* pTarget;
   public:
@@ -195,57 +243,54 @@ int hideBLE(){
 
 int blueConfig(int iTimeSecs){
   initBLE(SERVICE_UUID);
-  int iState = 1;
+  // MTU by malo byt 4*23
   
-  BLECharacteristic* opState = addCharBLE(true, "11aa358f-9224-46d9-b0f5-3a7ba1ac651e", 1, new CallbackStateDescriptor(&iState));
-  addCharBLE(true, "0b62f0bc-37b2-4345-973e-3138c37ff4ca", "0", new CallbackCommand());
+  //int iState = 1;
   
-  addCharBLE(true, "b81b8cac-7dce-4de0-a568-31b4a0b35816", TPCFG.iUltraCheckIntervalMS, new CallbackConfigSaverInt(&TPCFG.iUltraCheckIntervalMS));
-  addCharBLE(true, "70510db2-616d-4598-82e8-4efe1f5ad71a", TPCFG.iUltraExtraChecks, new CallbackConfigSaverInt(&TPCFG.iUltraExtraChecks));
-  addCharBLE(true, "47865e5e-35f4-4119-a9dd-7cc0d3cd7c7e", TPCFG.iUltraExtraChecksIntervalMS, new CallbackConfigSaverInt(&TPCFG.iUltraExtraChecksIntervalMS));
-  addCharBLE(true, "c5fa8d3e-8216-4e1e-b75e-dcfbd7b01455", TPCFG.fUltraTolerance, new CallbackConfigSaverFloat(&TPCFG.fUltraTolerance));
-  addCharBLE(true, "5f08db8e-16da-4f74-8084-4fe93be581dc", TPCFG.sWifiSSID, new CallbackConfigSaverString(&TPCFG.sWifiSSID));
-  addCharBLE(true, "eff0c5bd-426a-46de-904c-a3acbb847ba0", TPCFG.sWifiPassword, new CallbackConfigSaverString(&TPCFG.sWifiPassword));
-  addCharBLE(true, "8ef7a713-b363-4831-86cb-b4ae3ab69498", TPCFG.sFBKey, new CallbackConfigSaverString(&TPCFG.sFBKey));
-  addCharBLE(true, "9c8657d5-7343-4a1d-a5b8-f5acd689c763", TPCFG.sFBURL, new CallbackConfigSaverString(&TPCFG.sFBURL));
-  addCharBLE(true, "88558ac3-0138-424c-9b4f-460757bcb6ec", TPCFG.sFBMail, new CallbackConfigSaverString(&TPCFG.sFBMail));
-  addCharBLE(true, "820aeda2-1d70-42b9-8831-3b515f88d9a2", TPCFG.sFBPassword, new CallbackConfigSaverString(&TPCFG.sFBPassword));
+  BLECharacteristic* opChar = addCharBLE(true, "11aa358f-9224-46d9-b0f5-3a7ba1ac651e", "0", new CallbackUniversal());
   
-  startBLE();
-  showBLE();
+  //addCharBLE(true, "0b62f0bc-37b2-4345-973e-3138c37ff4ca", "0", new CallbackCommand());
+  //addCharBLE(true, "b81b8cac-7dce-4de0-a568-31b4a0b35816", TPCFG.iUltraCheckIntervalMS, new CallbackConfigSaverInt(&TPCFG.iUltraCheckIntervalMS));
+  //addCharBLE(true, "70510db2-616d-4598-82e8-4efe1f5ad71a", TPCFG.iUltraExtraChecks, new CallbackConfigSaverInt(&TPCFG.iUltraExtraChecks));
+  //addCharBLE(true, "47865e5e-35f4-4119-a9dd-7cc0d3cd7c7e", TPCFG.iUltraExtraChecksIntervalMS, new CallbackConfigSaverInt(&TPCFG.iUltraExtraChecksIntervalMS));
+  //addCharBLE(true, "c5fa8d3e-8216-4e1e-b75e-dcfbd7b01455", TPCFG.fUltraTolerance, new CallbackConfigSaverFloat(&TPCFG.fUltraTolerance));
+  //addCharBLE(true, "5f08db8e-16da-4f74-8084-4fe93be581dc", TPCFG.sWifiSSID, new CallbackConfigSaverString(&TPCFG.sWifiSSID));
+  //addCharBLE(true, "eff0c5bd-426a-46de-904c-a3acbb847ba0", TPCFG.sWifiPassword, new CallbackConfigSaverString(&TPCFG.sWifiPassword));
+  //addCharBLE(true, "8ef7a713-b363-4831-86cb-b4ae3ab69498", TPCFG.sFBKey, new CallbackConfigSaverString(&TPCFG.sFBKey));
+  //addCharBLE(true, "9c8657d5-7343-4a1d-a5b8-f5acd689c763", TPCFG.sFBURL, new CallbackConfigSaverString(&TPCFG.sFBURL));
+  //addCharBLE(true, "88558ac3-0138-424c-9b4f-460757bcb6ec", TPCFG.sFBMail, new CallbackConfigSaverString(&TPCFG.sFBMail));
+  //addCharBLE(true, "820aeda2-1d70-42b9-8831-3b515f88d9a2", TPCFG.sFBPassword, new CallbackConfigSaverString(&TPCFG.sFBPassword));
+  
+  
   if(iTimeSecs > 0){
+    iTimeSecs = iTimeSecs * 20;
+    startBLE();
+    showBLE();
     for(int i = 0; i < iTimeSecs; i++){
-      if(iState==2){
-        saveConfig();
-        opState->setValue("3");
-        delay(3000);
-        hideBLE();
-        stopBLE();
-        return 1;
-      }
-      delay(1000);
+      delay(50);
     }
-    loadConfig();
-    return 0;
-  }
-  else{
-    for(int i = 0; i < RESET_BLE_CONFIG_SECONDS_REQUIRED; i++){
-      if(iState==2){
-        saveConfig();
-        opState->setValue("3");
-        delay(3000);
-        hideBLE();
-        stopBLE();
-        return 1;
-      }
-      delay(1000);
-    }
-    opState->setValue("0");
-    delay(3000);
     hideBLE();
     stopBLE();
-    esp_deep_sleep_start();
-    return 0;
+    saveConfig();
+    return 1;
+  }
+  else{
+    iTimeSecs = RESET_BLE_CONFIG_SECONDS_REQUIRED * 20;
+    setDefaults();
+    setDefaultsWifi();
+    setDefaultsFB();
+    startBLE();
+    showBLE();
+    for(int i = 0; i < iTimeSecs; i++){
+      delay(50);
+    }
+    hideBLE();
+    stopBLE();
+    if(!checkLoadedConfigCritical()){
+      esp_deep_sleep_start();
+    }
+    saveConfig();
+    return 1;
   }
   
 }

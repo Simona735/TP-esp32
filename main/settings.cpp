@@ -10,20 +10,25 @@ DeviceConfigs TPCFG;
    //predvolene hodnoty
 
 void setDefaults(){
-  TPCFG.iUltraCheckIntervalMS = 60000;          //doba spanku medzi kontrolou posty
+  TPCFG.iUltraCheckInterval = 7000000;          //doba spanku medzi kontrolou posty
   TPCFG.iUltraExtraChecks = 4;            //kolko krat sa pri detekcii posty kontroluje navyse na zabranenie falosnych poplachov
   TPCFG.iUltraExtraChecksIntervalMS = 500;      //cas medzi extra kontrolami
-  TPCFG.fUltraTolerance = 0;              //tolerancia/citlivost ultrazvukoveho senzora, mensie znamena citlivejsie, minimum/default = 0
-  TPCFG.sWifiSSID = "0";  // SSID (meno) WiFi
-  TPCFG.sWifiPassword = "0";  // heslo WiFi
+  TPCFG.fUltraTolerance = 0.1;              //tolerancia/citlivost ultrazvukoveho senzora, mensie znamena citlivejsie, minimum/default = 0
   
 }
 
+void setDefaultsWifi(){
+  TPCFG.sWifiSSID = "-1";  // SSID (meno) WiFi
+  TPCFG.sWifiPassword = "-1";  // heslo WiFi
+}
+
 void setDefaultsFB(){
-  TPCFG.sFBKey = "AIzaSyBnvv9CnwggizzoOVf7Pj3-IO_Tv9sMKlo";
+  TPCFG.sFBKey = "-1";   //"AIzaSyBnvv9CnwggizzoOVf7Pj3-IO_Tv9sMKlo";
   TPCFG.sFBURL = "https://timovy-projekt-97069-default-rtdb.europe-west1.firebasedatabase.app/";
-  TPCFG.sFBMail = "acoak@hhh.ck";
-  TPCFG.sFBPassword = "999999";
+  TPCFG.sFBMail = "-1";   //"acoak@hhh.ck";
+  TPCFG.sFBPassword = "-1";   //"999999";
+  TPCFG.sFBPassword = "-1";   //"999999";
+  TPCFG.sFBID = "-1";
 }
 
 int pinInit(){

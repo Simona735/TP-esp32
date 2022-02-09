@@ -159,3 +159,8 @@ int sendDeviceFatalError(char* cause){
 
   return 0;
 }
+
+int fetchSettings(){
+  // TODO
+  return 0;
+}

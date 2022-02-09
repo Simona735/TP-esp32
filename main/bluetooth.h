@@ -6,7 +6,7 @@
 #include <BLEServer.h>
 
 
-#define MAXBLECHARACTERISTICS 30
+#define MAXBLECHARACTERISTICS 5
 
 
 
