@@ -37,11 +37,11 @@ Nastavenia (BLE):
 
 ### Firebase
 Zariadenie na signalizovanie udalosti nastavuje tieto hodnoty na jednotku:
-- "/database/[userMail]/[IDschranky]/NewMail"			Bola zaznamenana nova posta
-- "/database/[userMail]/[IDschranky]/FatalError"		Vyskytla sa vazna chyba(ale podarilo sa pripojit na Firebase)
+- "/database/[userMail]/[IDschranky]/NewMail"		bool		Bola zaznamenana nova posta
+- "/database/[userMail]/[IDschranky]/FatalError"	bool		Vyskytla sa vazna chyba(ale podarilo sa pripojit na Firebase)
 
 Pri odosielani udalosti zariadenie do nasledujucej premennej vlozi momentalny cas:
-- "/database/[userMail]/[IDschranky]/LastMsgTime"
+- "/database/[userMail]/[IDschranky]/LastMsgTime"		time
 
 Nasledujuce nastavenia sa sporadicky stiahnu z Firebaseu (cisla su defaultne hodnoty):
 - "/database/[userMail]/[IDschranky]/UCI"		int			7000000		Interval medzi kontrolami (mikrosekundy)
