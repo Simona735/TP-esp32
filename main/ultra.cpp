@@ -47,7 +47,7 @@ float ultraMeasure3(){
 }
 
 bool ultraCheck1(){
-	if((ultraMeasure1() + TPCFG.fUltraTolerance) < UltraV.fDistEmptyCM1){
+	if((ultraMeasure1() + UltraV.fUltraTolerance) < UltraV.fDistEmptyCM1){
     return true;
 	}
 	else{
@@ -56,7 +56,7 @@ bool ultraCheck1(){
 }
 
 bool ultraCheck2(){
-  if((ultraMeasure2() + TPCFG.fUltraTolerance) < UltraV.fDistEmptyCM2){
+  if((ultraMeasure2() + UltraV.fUltraTolerance) < UltraV.fDistEmptyCM2){
     return true;
   }
   else{
@@ -65,7 +65,7 @@ bool ultraCheck2(){
 }
 
 bool ultraCheck3(){
-  if((ultraMeasure3() + TPCFG.fUltraTolerance) < UltraV.fDistEmptyCM3){
+  if((ultraMeasure3() + UltraV.fUltraTolerance) < UltraV.fDistEmptyCM3){
     return true;
   }
   else{
@@ -86,4 +86,12 @@ bool ultraCheckAll(){
     return true;
   }
   return false;
+}
+
+
+void reloadUltraConfigs(){
+  UltraV.iUltraCheckInterval = TPCFG.iUltraCheckInterval;
+  UltraV.iUltraExtraChecks = TPCFG.iUltraExtraChecks;
+  UltraV.iUltraExtraChecksIntervalMS = TPCFG.iUltraExtraChecksIntervalMS;
+  UltraV.fUltraTolerance = TPCFG.fUltraTolerance;
 }

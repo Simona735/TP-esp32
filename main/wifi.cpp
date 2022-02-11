@@ -149,18 +149,69 @@ bool FBGetJson(const char* path, FirebaseJson* target){
 
 
 int sendNewMailNotif(){
-	// TODO
-	
-	return 0;
+  if(!wifiConnect()){return 0;}
+  FBInit();
+  FBConnect();
+  if(FBStatus()){return 0;}
+  char path[MAX_PATH_LENGTH] = "/database/";
+  strncat(path, TPCFG.sFBMail.c_str(), 40);
+  strncat(path, "/", 40);
+  strncat(path, TPCFG.sFBID.c_str(), 40);
+  strncat(path, "/LastMsgTime", 40);
+  FBSetTimestampNow(path);
+  memset(path, 0, MAX_PATH_LENGTH);
+  strncat(path, "/database/", 40);
+  strncat(path, TPCFG.sFBMail.c_str(), 40);
+  strncat(path, "/", 40);
+  strncat(path, TPCFG.sFBID.c_str(), 40);
+  strncat(path, "/NewMail",40);
+  FBSetBool(path, true);
+  return 1;
 }
 
 int sendDeviceFatalError(char* cause){
-  // TODO
-
-  return 0;
+  if(!wifiConnect()){return 0;}
+  FBInit();
+  FBConnect();
+  if(FBStatus()){return 0;}
+  char path[MAX_PATH_LENGTH] = "/database/";
+  strncat(path, TPCFG.sFBMail.c_str(), 40);
+  strncat(path, "/", 40);
+  strncat(path, TPCFG.sFBID.c_str(), 40);
+  strncat(path, "/LastMsgTime", 40);
+  FBSetTimestampNow(path);
+  memset(path, 0, MAX_PATH_LENGTH);
+  strncat(path, "/database/", 40);
+  strncat(path, TPCFG.sFBMail.c_str(), 40);
+  strncat(path, "/", 40);
+  strncat(path, TPCFG.sFBID.c_str(), 40);
+  strncat(path, "/FatalError",40);
+  FBSetBool(path, true);
+  return 1;
 }
 
 int fetchSettings(){
-  // TODO
-  return 0;
+  if(!wifiConnect()){return 0;}
+  FBInit();
+  FBConnect();
+  if(FBStatus()){return 0;}
+  char path[MAX_PATH_LENGTH] = "/database/";
+  strncat(path, TPCFG.sFBMail.c_str(), 40);
+  strncat(path, "/", 40);
+  strncat(path, TPCFG.sFBID.c_str(), 40);
+  strncat(path, "/", 40);
+  char* path2 = path+strlen(path);
+  strncat(path, "UCI", 40);
+  FBGetInt(path, &(TPCFG.iUltraCheckInterval));
+  memset (path2, 0, 10);
+  strncat(path, "UEC", 40);
+  FBGetInt(path, &(TPCFG.iUltraExtraChecks));
+  memset (path2, 0, 10);
+  strncat(path, "UECI", 40);
+  FBGetInt(path, &(TPCFG.iUltraExtraChecksIntervalMS));
+  memset (path2, 0, 10);
+  strncat(path, "UT", 40);
+  FBGetFloat(path, &(TPCFG.fUltraTolerance));
+  //memset (path2, 0, 10);
+  return 1;
 }

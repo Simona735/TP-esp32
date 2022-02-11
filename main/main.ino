@@ -42,6 +42,8 @@ void setup() {
     //checkU();   TODO !!!
     if(iCycle >= ADDITIONAL_TASKS_FREQUENCY){
       fetchSettings();
+      reloadUltraConfigs();
+      saveConfig();
       iCycle = 0;
     }
     else{
@@ -81,7 +83,7 @@ void setup() {
 
   
   serialDBOut("zariadenie zaspalo");
-  esp_deep_sleep(TPCFG.iUltraCheckInterval); // trvanie spanku sa udava v mikrosekundach, premenna je milisekundy
+  esp_deep_sleep(UltraV.iUltraCheckInterval); // trvanie spanku sa udava v mikrosekundach, premenna je milisekundy
   
 }
 
@@ -94,8 +96,8 @@ int checkU(){
   pinInit();
   if(ultraCheckAll()){
     int i;
-    for(i=TPCFG.iUltraExtraChecks; i!=0; i--){
-      delay(TPCFG.iUltraExtraChecksIntervalMS);
+    for(i=UltraV.iUltraExtraChecks; i!=0; i--){
+      delay(UltraV.iUltraExtraChecksIntervalMS);
       if(!(ultraCheckAll())){
         i=2;
         break;
@@ -112,8 +114,6 @@ int checkU(){
         esp_deep_sleep(FATAL_ERROR_RESET_TIME);
       }
 
-      FBInit();
-      FBConnect();
       sendNewMailNotif();
     }
   }
