@@ -54,4 +54,5 @@ extern DeviceConfigs TPCFG;
 void setDefaults();
 void setDefaultsWifi();
 void setDefaultsFB();
+void setDummyCfg(String str);
 int pinInit();

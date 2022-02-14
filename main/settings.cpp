@@ -27,8 +27,16 @@ void setDefaultsFB(){
   TPCFG.sFBURL = "https://timovy-projekt-97069-default-rtdb.europe-west1.firebasedatabase.app/";
   TPCFG.sFBMail = "-1";   //"acoak@hhh.ck";
   TPCFG.sFBPassword = "-1";   //"999999";
-  TPCFG.sFBPassword = "-1";   //"999999";
   TPCFG.sFBID = "-1";
+}
+
+void setDummyCfg(String str){
+  TPCFG.sWifiSSID = str;
+  TPCFG.sWifiPassword = str;
+  TPCFG.sFBKey = str;
+  TPCFG.sFBMail = str;
+  TPCFG.sFBPassword = str;
+  TPCFG.sFBID = str;
 }
 
 int pinInit(){

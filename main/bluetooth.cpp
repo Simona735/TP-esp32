@@ -35,36 +35,40 @@ class CallbackUniversal: public BLECharacteristicCallbacks {
     
     if(strcmp(str, "WS") == 0){
       TPCFG.sWifiSSID = String(sep);
-      return;
+      
     }
-    if(strcmp(str, "WP") == 0){
+    else if(strcmp(str, "WP") == 0){
       TPCFG.sWifiPassword = String(sep);
-      return;
+      
     }
-    if(strcmp(str, "FBK") == 0){
+    else if(strcmp(str, "FBK") == 0){
       TPCFG.sFBKey = String(sep);
-      return;
+      
     }
-    if(strcmp(str, "FBM") == 0){
+    else if(strcmp(str, "FBM") == 0){
       TPCFG.sFBMail = String(sep);
-      return;
+      
     }
-    if(strcmp(str, "FBP") == 0){
+    else if(strcmp(str, "FBP") == 0){
       TPCFG.sFBPassword = String(sep);
-      return;
+      
     }
-    if(strcmp(str, "FBI") == 0){
+    else if(strcmp(str, "FBI") == 0){
       TPCFG.sFBID = String(sep);
-      return;
+      
     }
-    if(strcmp(str, "+FRST") == 0){
+    else if(strcmp(str, "+FRST") == 0){
       eraseSavedConfig();
       ESP.restart();
-      return;
+      
     }
-    if(strcmp(str, "+CONF") == 0){
+    else if(strcmp(str, "+CONF") == 0){
       *piState = 2;
-      return;
+      
+    }
+    else if(strcmp(str, "+TEST") == 0){
+      setDummyCfg(String(sep));
+      
     }
 
     pCharacteristic->setValue("0");
