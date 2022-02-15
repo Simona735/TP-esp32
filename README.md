@@ -40,7 +40,7 @@ Nastavenia (BLE):
     [userID]
     ├── mailbox_iter: int
     └── [IDschranky]
-         ├── esp
+         ├── events
          │    ├── NewMail: bool         # Bola zaznamenana nova posta, true = nova posta, false = nie je nova posta
          │    ├── EmptyBox: bool        #
          │    ├── FullBox: bool         #
