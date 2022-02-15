@@ -36,17 +36,22 @@ Nastavenia (BLE):
 - "FBI"		string		ID schranky vo Firebase
 
 ### Firebase
-Zariadenie na signalizovanie udalosti nastavuje tieto hodnoty na jednotku:
-- "/database/[userMail]/[IDschranky]/NewMail"		bool		Bola zaznamenana nova posta
-- "/database/[userMail]/[IDschranky]/FatalError"	bool		Vyskytla sa vazna chyba(ale podarilo sa pripojit na Firebase)
 
-Pri odosielani udalosti zariadenie do nasledujucej premennej vlozi momentalny cas:
-- "/database/[userMail]/[IDschranky]/LastMsgTime"		time
-
-Nasledujuce nastavenia sa sporadicky stiahnu z Firebaseu (cisla su defaultne hodnoty):
-- "/database/[userMail]/[IDschranky]/UCI"		int			7000000		Interval medzi kontrolami (mikrosekundy)
-- "/database/[userMail]/[IDschranky]/UEC"		int			4			Kontroly navyse, ked sa nieco zdetekuje (aby se predislo falosnemu poplachu)
-- "/database/[userMail]/[IDschranky]/UECI"		int			500			Interval medzi kontrolami navyse
-- "/database/[userMail]/[IDschranky]/UT"		float		0.1			Tolerancia, (vacsia = menej falosnych poplachov, ale tenke listy nezdetekuje, iba ked ich je viac)
-
+    [userID]
+    ├── mailbox_iter: int
+    └── [IDschranky]
+         ├── esp
+         │    ├── NewMail: bool         # Bola zaznamenana nova posta, true = nova posta, false = nie je nova posta
+         │    ├── EmptyBox: bool        #
+         │    ├── FullBox: bool         #
+         │    ├── FatalError: bool      # Vyskytla sa vazna chyba(ale podarilo sa pripojit na Firebase)
+         │    └── LastMsgTime: time     # last message time, pri odosielani udalosti zariadenie do nasledujucej premennej vlozi momentalny cas
+         └── settings
+              ├── UCI: int          # default - 7000000, Interval medzi kontrolami (mikrosekundy)
+              ├── UEC: int          # default - 4, Kontroly navyse, ked sa nieco zdetekuje (aby se predislo falosnemu poplachu)
+              ├── UECI: int         # default - 500, Interval medzi kontrolami navyse
+              ├── UT: float         # default - 0.1, Tolerancia, (vacsia = menej falosnych poplachov, ale tenke listy nezdetekuje, iba ked ich je viac)
+              ├── low_power: bool   # default - true, low power mode, false = normal, true = low
+              ├── reset: bool       # default - false, esp reset to be done
+              └── name: string      # default - name + [mailbox_iter], pomenovanie schranky
 
