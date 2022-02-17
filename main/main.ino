@@ -73,7 +73,7 @@ void setup() {
       saveConfig();
       iCycle = 0;
     }
-    //ultraSetEmpty();  // kalibracia TODO otestovat!!!
+    ultraSetEmpty();
     
   
   }
