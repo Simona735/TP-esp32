@@ -23,7 +23,7 @@ void setDefaultsWifi(){
 }
 
 void setDefaultsFB(){
-  TPCFG.sFBKey = "-1";   //"AIzaSyBnvv9CnwggizzoOVf7Pj3-IO_Tv9sMKlo";
+  TPCFG.sFBKey = "AIzaSyBnvv9CnwggizzoOVf7Pj3-IO_Tv9sMKlo";
   TPCFG.sFBURL = "https://timovy-projekt-97069-default-rtdb.europe-west1.firebasedatabase.app/";
   TPCFG.sFBMail = "-1";   //"acoak@hhh.ck";
   TPCFG.sFBPassword = "-1";   //"999999";

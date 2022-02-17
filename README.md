@@ -21,7 +21,7 @@ WP;tajneheslo123
 - Hned ako to appka zapise, ESP to spracuje a zase to prepise na "0" ked je hotove a pripravene.
 - ESP prijima nastavenia/prikazy cez BLE v dvoch situaciach:
 1: Reset vyvolany stlacenim tlacitka, po ktorom sa podarilo nacitat pouzitelne predosle nastavenia. V tomto pripade je BLE zapnute na kratku dobu (30s) a appka moze (nemusi) nastavit lubovolne nastavenia (nemusi vsetky).
-2: Reset vyvolany stlacenim tlacitka, po ktorom sa nepodarilo nacitat nastavenia (neexistuju, prve zapnutie). V tomto pripade je BLE zapnute dlho (10m), a ak zariadnie nastavenia neobdrzi, permanentne zaspi (do manualneho restartu). Appka musi dodat vsetky(!) nastavenia na zozname dole. Nastavovanie treba ukoncit pomocou prikazu +CONF.
+2: Reset vyvolany stlacenim tlacitka, po ktorom sa nepodarilo nacitat nastavenia (neexistuju, prve zapnutie). V tomto pripade je BLE zapnute dlho (10m), a ak zariadnie nastavenia neobdrzi, permanentne zaspi (do manualneho restartu). Appka musi dodat vsetky(!!!, okrem oznacenych (N)) nastavenia na zozname dole. Nastavovanie treba ukoncit pomocou prikazu +CONF.
 
 Prikazy(BLE):
 - "+FRST"		Tovarensky reset. Zmaze vsetko a restartuje zariadenie.
@@ -30,7 +30,7 @@ Prikazy(BLE):
 Nastavenia (BLE):
 - "WS"		string		SSID WiFi
 - "WP"		string		Heslo WiFi
-- "FBK"		string		API kluc na Firebase
+- "FBK"		string(N)		API kluc na Firebase
 - "FBM"		string		Mail na Firebase
 - "FBP"		string		Heslo na Firebase
 - "FBI"		string		ID schranky vo Firebase
