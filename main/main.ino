@@ -73,6 +73,18 @@ void setup() {
       saveConfig();
       iCycle = 0;
     }
+    serialDBOut("Wifi:");
+    serialDBOut(TPCFG.sWifiSSID);
+    serialDBOut("Wifi heslo:");
+    serialDBOut(TPCFG.sWifiPassword);
+    serialDBOut("FB mail");
+    serialDBOut(TPCFG.sFBMail);
+    serialDBOut("FB heslo");
+    serialDBOut(TPCFG.sFBPassword);
+    serialDBOut("FB id schranky");
+    serialDBOut(TPCFG.sFBID);
+    serialDBOut("FB id usera");
+    serialDBOut(TPCFG.sFBUser);
     ultraSetEmpty();
     
   

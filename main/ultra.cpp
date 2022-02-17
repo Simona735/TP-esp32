@@ -8,6 +8,7 @@
 RTC_DATA_ATTR UltraVals UltraV;    // prezije spanok
 
 void ultraSetEmpty(){
+  pinInit();
   UltraV.fDistEmptyCM1 = ultraMeasure1();
   delay(ULTRA_SEQUENCE_DELAY);
   UltraV.fDistEmptyCM2 = ultraMeasure2();

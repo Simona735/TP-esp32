@@ -285,8 +285,17 @@ int blueConfig(int iTimeSecs){
     showBLE();
     for(int i = 0; i < iTimeSecs; i++){
       delay(50);
-      if(iState == 2){break;}
+      if(iState == 2){
+        opChar->setValue("3");
+        delay(3000);
+        hideBLE();
+        stopBLE();
+        saveConfig();
+        return 1;
+      }
     }
+    opChar->setValue("2");
+    delay(3000);
     hideBLE();
     stopBLE();
     saveConfig();
@@ -301,8 +310,20 @@ int blueConfig(int iTimeSecs){
     showBLE();
     for(int i = 0; i < iTimeSecs; i++){
       delay(50);
-      if(iState == 2){break;}
+      if(iState == 2){
+        opChar->setValue("3");
+        delay(3000);
+        hideBLE();
+        stopBLE();
+        if(!checkLoadedConfigCritical()){
+          esp_deep_sleep_start();
+        }
+        saveConfig();
+        return 1;
+      }
     }
+    opChar->setValue("2");
+    delay(3000);
     hideBLE();
     stopBLE();
     if(!checkLoadedConfigCritical()){
