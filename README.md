@@ -34,6 +34,7 @@ Nastavenia (BLE):
 - "FBM"		string		Mail na Firebase
 - "FBP"		string		Heslo na Firebase
 - "FBI"		string		ID schranky vo Firebase
+- "FBU"		string		ID usera vo Firebase
 
 ### Firebase
 Zariadenie na signalizovanie udalosti nastavuje tieto hodnoty na jednotku:
