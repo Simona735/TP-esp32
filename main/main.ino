@@ -51,7 +51,7 @@ void setup() {
       serialDBOut("ziadne stahovanie");
       iCycle++;
     }
-    //checkU();   TODO otestovat!!!
+    checkU();
     
   }
   else if(rtc_get_reset_reason(0)==1 || rtc_get_reset_reason(0)==12)     // STANDARDNY RESET (odpojenie napajania alebo softverovy reset)
@@ -102,7 +102,7 @@ void setup() {
   serialDBOut("SSID:");
   serialDBOut(TPCFG.sWifiSSID);
   serialDBOut("zariadenie zaspalo");
-  esp_deep_sleep(UltraV.iUltraCheckInterval); // trvanie spanku sa udava v mikrosekundach, premenna je milisekundy
+  esp_deep_sleep(UltraV.iUltraCheckInterval);
   
 }
 
@@ -112,6 +112,35 @@ void loop() {
 
 
 int checkU(){
+  pinInit();
+  if(ultraCheck1()){
+    int i;
+    for(i=UltraV.iUltraExtraChecks; i!=0; i--){
+      delay(UltraV.iUltraExtraChecksIntervalMS);
+      if(!(ultraCheck1())){
+        i=2;
+        break;
+      }
+    }
+    if(i==0){
+      if(!loadConfig()){
+        serialDBOut("C1 : Chyba pri nacitani nastaveni");
+        esp_deep_sleep(FATAL_ERROR_RESET_TIME);
+      }
+      if(!wifiConnect()){
+        serialDBOut("pripojenie wifi zlyhalo");
+        return 0;
+        
+      }
+      sendNewMailNotif();
+      return 1;
+    }
+    
+  }
+  return 0;
+}
+
+int checkU3(){
   pinInit();
   if(ultraCheckAll()){
     int i;
@@ -123,17 +152,19 @@ int checkU(){
       }
     }
     if(i==0){
-      if(!wifiConnect()){
-        serialDBOut("pripojenie wifi zlyhalo");
-        
-      }
-
       if(!loadConfig()){
         serialDBOut("C1 : Chyba pri nacitani nastaveni");
         esp_deep_sleep(FATAL_ERROR_RESET_TIME);
       }
-
+      if(!wifiConnect()){
+        serialDBOut("pripojenie wifi zlyhalo");
+        return 0;
+        
+      }
       sendNewMailNotif();
+      return 1;
     }
+    
   }
+  return 0;
 }

@@ -57,6 +57,10 @@ class CallbackUniversal: public BLECharacteristicCallbacks {
       TPCFG.sFBID = String(sep);
       
     }
+    else if(strcmp(str, "FBU") == 0){
+      TPCFG.sFBUser = String(sep);
+      
+    }
     else if(strcmp(str, "+FRST") == 0){
       eraseSavedConfig();
       ESP.restart();

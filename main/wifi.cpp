@@ -153,18 +153,18 @@ int sendNewMailNotif(){
   FBInit();
   FBConnect();
   if(FBStatus()){return 0;}
-  char path[MAX_PATH_LENGTH] = "/database/";
-  strncat(path, TPCFG.sFBMail.c_str(), 40);
+  char path[MAX_PATH_LENGTH] = "/";
+  strncat(path, TPCFG.sFBUser.c_str(), 40);
   strncat(path, "/", 40);
   strncat(path, TPCFG.sFBID.c_str(), 40);
-  strncat(path, "/LastMsgTime", 40);
+  strncat(path, "/events/LastMsgTime", 40);
   FBSetTimestampNow(path);
   memset(path, 0, MAX_PATH_LENGTH);
-  strncat(path, "/database/", 40);
-  strncat(path, TPCFG.sFBMail.c_str(), 40);
+  strncat(path, "/", 40);
+  strncat(path, TPCFG.sFBUser.c_str(), 40);
   strncat(path, "/", 40);
   strncat(path, TPCFG.sFBID.c_str(), 40);
-  strncat(path, "/NewMail",40);
+  strncat(path, "/events/NewMail",40);
   FBSetBool(path, true);
   return 1;
 }
@@ -174,18 +174,18 @@ int sendDeviceFatalError(char* cause){
   FBInit();
   FBConnect();
   if(FBStatus()){return 0;}
-  char path[MAX_PATH_LENGTH] = "/database/";
-  strncat(path, TPCFG.sFBMail.c_str(), 40);
+  char path[MAX_PATH_LENGTH] = "/";
+  strncat(path, TPCFG.sFBUser.c_str(), 40);
   strncat(path, "/", 40);
   strncat(path, TPCFG.sFBID.c_str(), 40);
-  strncat(path, "/LastMsgTime", 40);
+  strncat(path, "/events/LastMsgTime", 40);
   FBSetTimestampNow(path);
   memset(path, 0, MAX_PATH_LENGTH);
-  strncat(path, "/database/", 40);
-  strncat(path, TPCFG.sFBMail.c_str(), 40);
+  strncat(path, "/", 40);
+  strncat(path, TPCFG.sFBUser.c_str(), 40);
   strncat(path, "/", 40);
   strncat(path, TPCFG.sFBID.c_str(), 40);
-  strncat(path, "/FatalError",40);
+  strncat(path, "/events/FatalError",40);
   FBSetBool(path, true);
   return 1;
 }
@@ -195,11 +195,11 @@ int fetchSettings(){
   FBInit();
   FBConnect();
   if(FBStatus()){return 0;}
-  char path[MAX_PATH_LENGTH] = "/database/";
-  strncat(path, TPCFG.sFBMail.c_str(), 40);
+  char path[MAX_PATH_LENGTH] = "/";
+  strncat(path, TPCFG.sFBUser.c_str(), 40);
   strncat(path, "/", 40);
   strncat(path, TPCFG.sFBID.c_str(), 40);
-  strncat(path, "/", 40);
+  strncat(path, "/settings/", 40);
   char* path2 = path+strlen(path);
   strncat(path, "UCI", 40);
   FBGetInt(path, &(TPCFG.iUltraCheckInterval));

@@ -26,7 +26,8 @@ int checkLoadedConfig(){
     TPCFG.sFBURL == "-1" ||
     TPCFG.sFBMail == "-1" ||
     TPCFG.sFBPassword == "-1" ||
-    TPCFG.sFBID == "-1"
+    TPCFG.sFBID == "-1" ||
+    TPCFG.sFBUser == "-1"
   ){
     return 0;
   }
@@ -41,7 +42,8 @@ int checkLoadedConfigCritical(){
     TPCFG.sFBURL == "-1" ||
     TPCFG.sFBMail == "-1" ||
     TPCFG.sFBPassword == "-1" ||
-    TPCFG.sFBID == "-1"
+    TPCFG.sFBID == "-1" ||
+    TPCFG.sFBUser == "-1"
   ){
     return 0;
   }
@@ -61,6 +63,7 @@ int checkLoadedConfigDiag(){
   if(TPCFG.sFBMail == "-1"){return i;} i++;
   if(TPCFG.sFBPassword == "-1"){return i;} i++;
   if(TPCFG.sFBID == "-1"){return i;} i++;
+  if(TPCFG.sFBUser == "-1"){return i;} i++;
   
   return 1000;
 }
@@ -79,6 +82,7 @@ int loadConfig(){
   TPCFG.sFBMail = NVS.getString("FBM", "-1");                          // 88558ac3-0138-424c-9b4f-460757bcb6ec
   TPCFG.sFBPassword = NVS.getString("FBP", "-1");                     // 820aeda2-1d70-42b9-8831-3b515f88d9a2
   TPCFG.sFBID = NVS.getString("FBI", "-1");
+  TPCFG.sFBUser = NVS.getString("FBU", "-1");
   
   NVS.end();
 	return checkLoadedConfig();
@@ -98,6 +102,7 @@ int saveConfig(){
   NVS.putString("FBM", TPCFG.sFBMail);
   NVS.putString("FBP", TPCFG.sFBPassword);
   NVS.putString("FBI", TPCFG.sFBID);
+  NVS.putString("FBU", TPCFG.sFBUser);
   
   NVS.end();
 	return 1;

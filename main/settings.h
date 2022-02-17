@@ -5,12 +5,12 @@
 
 
 // natvrdo nastavene hodnoty
-#define TRIGPIN1 13
-#define ECHOPIN1 15
-#define TRIGPIN2 13
-#define ECHOPIN2 15
-#define TRIGPIN3 13
-#define ECHOPIN3 15
+#define TRIGPIN1 12
+#define ECHOPIN1 13
+#define TRIGPIN2 12
+#define ECHOPIN2 13
+#define TRIGPIN3 12
+#define ECHOPIN3 13
 #define WIFI_CRED_LENGTH 30
 #define NVSNAME "MAILBOX"
 #define SOUND_SPEED 0.017
@@ -22,7 +22,7 @@
 #define RESET_BLE_CONFIG_SECONDS 30
 #define RESET_BLE_CONFIG_SECONDS_REQUIRED 600
 #define ADDITIONAL_TASKS_FREQUENCY 100
-#define MAX_PATH_LENGTH 80
+#define MAX_PATH_LENGTH 100
 
 
 
@@ -30,7 +30,7 @@ struct DeviceConfigs{
 	int iUltraCheckInterval;					//doba spanku medzi kontrolou posty (mikrosekundy)
 	int iUltraExtraChecks;						//kolko krat sa pri detekcii posty kontroluje navyse na zabranenie falosnych poplachov
 	int iUltraExtraChecksIntervalMS;			//cas medzi extra kontrolami (milisekundy)
-  float fUltraTolerance;              //tolerancia/citlivost ultrazvukoveho senzora, mensie znamena citlivejsie, minimum/default = 0
+  float fUltraTolerance;              //tolerancia/citlivost ultrazvukoveho senzora v CM, mensie znamena citlivejsie, minimum/default = 0
   //char sWifiSSID[WIFI_CRED_LENGTH];  // SSID (meno) WiFi
   //char sWifiPassword[WIFI_CRED_LENGTH];  // heslo WiFi
   String sWifiSSID;  // SSID (meno) WiFi
@@ -40,6 +40,7 @@ struct DeviceConfigs{
   String sFBMail;
   String sFBPassword;
   String sFBID;
+  String sFBUser;
 
 	
 	

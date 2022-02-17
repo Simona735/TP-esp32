@@ -28,6 +28,7 @@ void setDefaultsFB(){
   TPCFG.sFBMail = "-1";   //"acoak@hhh.ck";
   TPCFG.sFBPassword = "-1";   //"999999";
   TPCFG.sFBID = "-1";
+  TPCFG.sFBUser = "-1";
 }
 
 void setDummyCfg(String str){
@@ -37,6 +38,7 @@ void setDummyCfg(String str){
   TPCFG.sFBMail = str;
   TPCFG.sFBPassword = str;
   TPCFG.sFBID = str;
+  TPCFG.sFBUser = str;
 }
 
 int pinInit(){
