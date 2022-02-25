@@ -30,13 +30,15 @@ Prikazy(BLE):
 Nastavenia (BLE):
 - "WS"		string		SSID WiFi
 - "WP"		string		Heslo WiFi
-- "FBK"		string(N)		API kluc na Firebase
+- "FBK"		string(N)	API kluc na Firebase
 - "FBM"		string		Mail na Firebase
 - "FBP"		string		Heslo na Firebase
 - "FBI"		string		ID schranky vo Firebase
 - "FBU"		string		ID usera vo Firebase
 
+Poznamka: -1 alebo "-1" je v ESPcku interpretovana ako null/prazdna/ziadna/nezadana/chybajuca hodnota.
 ### Firebase
+
 
     [userID]
     ├── mailbox_iter: int
@@ -48,11 +50,14 @@ Nastavenia (BLE):
          │    ├── FatalError: bool      # Vyskytla sa vazna chyba(ale podarilo sa pripojit na Firebase)
          │    └── LastMsgTime: time     # last message time, pri odosielani udalosti zariadenie do nasledujucej premennej vlozi momentalny cas
          └── settings
-              ├── UCI: int          # default - 7000000, Interval medzi kontrolami (mikrosekundy)
-              ├── UEC: int          # default - 4, Kontroly navyse, ked sa nieco zdetekuje (aby se predislo falosnemu poplachu)
-              ├── UECI: int         # default - 500, Interval medzi kontrolami navyse
-              ├── UT: float         # default - 0.1, Tolerancia, (vacsia = menej falosnych poplachov, ale tenke listy nezdetekuje, iba ked ich je viac)
+              ├── UCI: int          # <5000000, 7000000, 300000000> Interval medzi kontrolami (mikrosekundy)
+              ├── UEC: int          # <1, 4, 30> Kontroly navyse, ked sa nieco zdetekuje (aby se predislo falosnemu poplachu)
+              ├── UECI: int         # <200, 500, 5000> Interval medzi kontrolami navyse
+              ├── UT: float         # <-3, 0.1, 3> Tolerancia, (vacsia = menej falosnych poplachov, ale tenke listy nezdetekuje, iba ked ich je viac)
               ├── low_power: bool   # default - true, low power mode, false = normal, true = low
               ├── reset: bool       # default - false, esp reset to be done
               └── name: string      # default - name + [mailbox_iter], pomenovanie schranky
 
+
+Hodnoty pre ciselne nastavenia: <minimum, default, maximum>
+Poznamka: -1 alebo "-1" je v ESPcku interpretovana ako null/prazdna/ziadna/nezadana/chybajuca hodnota.

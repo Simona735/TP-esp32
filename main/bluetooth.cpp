@@ -31,7 +31,8 @@ class CallbackUniversal: public BLECharacteristicCallbacks {
     char* sep = strpbrk(str, ";");
     *sep = '\0';
     sep += 1;
-
+    //Serial.println(str);
+    //Serial.println(sep);
     
     if(strcmp(str, "WS") == 0){
       TPCFG.sWifiSSID = String(sep);
