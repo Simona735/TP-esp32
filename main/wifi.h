@@ -29,5 +29,6 @@ bool FBSetString(const char* path, String str);
 bool FBSetString(const char* path, const char* str);
 bool FBSetJson(const char* path, FirebaseJson json);
 int sendNewMailNotif();
+int sendEmptyMailNotif();
 int sendDeviceFatalError(char* cause);
 int fetchSettings();

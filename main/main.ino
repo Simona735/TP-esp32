@@ -8,16 +8,10 @@
 #include "wifi.h"
 #include "ultra.h"
 #include <rom/rtc.h>
+#include "diags.h"
 
 
-// zakomentovanie nasledujuceho riadku zkompiluje program bez debugovacich vypisov na seriovom vystupe pomocou makra serialDBOut("")
-#define TPCOMPILEDEBUG
 
-#ifdef TPCOMPILEDEBUG
-#define serialDBOut(a); Serial.println(a);
-#else
-#define serialDBOut(a);
-#endif
 
 
 RTC_DATA_ATTR int iCycle;
@@ -29,36 +23,34 @@ void setup() {
   
   
 
-  #ifdef TPCOMPILEDEBUG
-  Serial.begin(115200);
-  #endif
+  DBG_SERIAL_BEGIN;
 
   
   
   if(rtc_get_reset_reason(0)==5)    // PREBUDENIE
   {
-    serialDBOut("PREBUDENIE");
+    serialDBGOut("PREBUDENIE");
     // ked sa zariadenie da do spankoveho rezimu, vymaze sa RAM. Premenne sa daju ulozit aj do specialnej pamate ktora toto prezije pomocou RTC_DATA_ATTR, ale tej je malo (asi 8kB) a nedaju sa pouzit String a podobne typy ktore dynamicky alokuju pamat pre hodnoty
     
     if(iCycle >= ADDITIONAL_TASKS_FREQUENCY){
-      serialDBOut("stahovanie nastaveni...");
+      serialDBGOut("stahovanie nastaveni...");
       fetchSettings();
       reloadUltraConfigs();
       saveConfig();
       iCycle = 0;
     }
     else{
-      serialDBOut("ziadne stahovanie");
+      serialDBGOut("ziadne stahovanie");
       iCycle++;
     }
-    checkU();
+    checkMail();
     
   }
   else if(rtc_get_reset_reason(0)==1 || rtc_get_reset_reason(0)==12)     // STANDARDNY RESET (odpojenie napajania alebo softverovy reset)
   {
-    serialDBOut("STANDARDNY RESET");
+    serialDBGOut("STANDARDNY RESET");
     if(loadConfig()){  // nacita nastavenia
-      serialDBOut("kratke BLE");
+      serialDBGOut("kratke BLE");
       blueConfig(RESET_BLE_CONFIG_SECONDS);  // prijme nove nastavenia cez BLE
       fetchSettings();
       reloadUltraConfigs();
@@ -66,34 +58,35 @@ void setup() {
       iCycle = 0;
     }
     else{
-      serialDBOut("dlhe BLE");
+      serialDBGOut("dlhe BLE");
       blueConfig(0);  // neexistuju ulozene nastavenia, nutne prijme nove nastavenia cez BLE, inak po case permanentne zaspi (do manualneho restartu)
       fetchSettings();
       reloadUltraConfigs();
       saveConfig();
       iCycle = 0;
     }
-    serialDBOut("Wifi:");
-    serialDBOut(TPCFG.sWifiSSID);
-    serialDBOut("Wifi heslo:");
-    serialDBOut(TPCFG.sWifiPassword);
-    serialDBOut("FB mail");
-    serialDBOut(TPCFG.sFBMail);
-    serialDBOut("FB heslo");
-    serialDBOut(TPCFG.sFBPassword);
-    serialDBOut("FB id schranky");
-    serialDBOut(TPCFG.sFBID);
-    serialDBOut("FB id usera");
-    serialDBOut(TPCFG.sFBUser);
+    serialDBGOut("Wifi:");
+    serialDBGOut(TPCFG.sWifiSSID);
+    serialDBGOut("Wifi heslo:");
+    serialDBGOut(TPCFG.sWifiPassword);
+    serialDBGOut("FB mail");
+    serialDBGOut(TPCFG.sFBMail);
+    serialDBGOut("FB heslo");
+    serialDBGOut(TPCFG.sFBPassword);
+    serialDBGOut("FB id schranky");
+    serialDBGOut(TPCFG.sFBID);
+    serialDBGOut("FB id usera");
+    serialDBGOut(TPCFG.sFBUser);
+    
     ultraSetEmpty();
     
   
   }
   else     // INY RESET
   {
-    serialDBOut("INY RESET");
+    serialDBGOut("INY RESET");
     if(!loadConfig()){
-      serialDBOut("L1B : Chyba pri nacitani nastaveni");
+      serialDBGOut("L1B : Chyba pri nacitani nastaveni");
       esp_deep_sleep(FATAL_ERROR_RESET_TIME);
     }
   
@@ -107,76 +100,17 @@ void setup() {
 
   //loadConfig();  // TEST
   //reloadUltraConfigs();  // TEST
-  serialDBOut("ID:");
-  serialDBOut(TPCFG.sFBID);
-  serialDBOut("cyklus");
-  serialDBOut(iCycle);
-  serialDBOut("SSID:");
-  serialDBOut(TPCFG.sWifiSSID);
-  serialDBOut("zariadenie zaspalo");
+  serialDBGOut("ID:");
+  serialDBGOut(TPCFG.sFBID);
+  serialDBGOut("cyklus");
+  serialDBGOut(iCycle);
+  serialDBGOut("SSID:");
+  serialDBGOut(TPCFG.sWifiSSID);
+  serialDBGOut("zariadenie zaspalo");
   esp_deep_sleep(UltraV.iUltraCheckInterval);
   
 }
 
 void loop() {
   // ked sa zariadenie zobudi zo spanku, ide zase do setup(), takze loop() je prazdny
-}
-
-
-int checkU(){
-  pinInit();
-  if(ultraCheck1()){
-    int i;
-    for(i=UltraV.iUltraExtraChecks; i!=0; i--){
-      delay(UltraV.iUltraExtraChecksIntervalMS);
-      if(!(ultraCheck1())){
-        i=2;
-        break;
-      }
-    }
-    if(i==0){
-      if(!loadConfig()){
-        serialDBOut("C1 : Chyba pri nacitani nastaveni");
-        esp_deep_sleep(FATAL_ERROR_RESET_TIME);
-      }
-      if(!wifiConnect()){
-        serialDBOut("pripojenie wifi zlyhalo");
-        return 0;
-        
-      }
-      sendNewMailNotif();
-      return 1;
-    }
-    
-  }
-  return 0;
-}
-
-int checkU3(){
-  pinInit();
-  if(ultraCheckAll()){
-    int i;
-    for(i=UltraV.iUltraExtraChecks; i!=0; i--){
-      delay(UltraV.iUltraExtraChecksIntervalMS);
-      if(!(ultraCheckAll())){
-        i=2;
-        break;
-      }
-    }
-    if(i==0){
-      if(!loadConfig()){
-        serialDBOut("C1 : Chyba pri nacitani nastaveni");
-        esp_deep_sleep(FATAL_ERROR_RESET_TIME);
-      }
-      if(!wifiConnect()){
-        serialDBOut("pripojenie wifi zlyhalo");
-        return 0;
-        
-      }
-      sendNewMailNotif();
-      return 1;
-    }
-    
-  }
-  return 0;
 }
