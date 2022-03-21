@@ -12,7 +12,7 @@
 // https://www.uuidgenerator.net/
 
 #define SERVICE_UUID        "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
-#define CHARACTERISTIC_UUID1 "beb5483e-36e1-4688-b7f5-ea07361b26a8"
+#define CHARACTERISTIC_UUID1 "11aa358f-9224-46d9-b0f5-3a7ba1ac651e"
 #define CHARACTERISTIC_UUID2 "aea5483e-36e1-4688-b7f5-ea07361b26a9"
 
 BLECharacteristic *pCharacteristic1;
