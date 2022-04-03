@@ -71,15 +71,15 @@ bool connectToServer() {
     // Obtain a reference to the characteristic in the service of the remote BLE server.
     pRemoteCharacteristic1 = pRemoteService->getCharacteristic(charUUID1);
     if (pRemoteCharacteristic1 == nullptr) {
-      Serial.print("Failed to find our characteristic UUID: ");
+      Serial.print("Failed to find our characteristic 1 UUID: ");
       Serial.println(charUUID1.toString().c_str());
       pClient->disconnect();
       return false;
     }
     Serial.println(" - Found our characteristic 1");
-    pRemoteCharacteristic1 = pRemoteService->getCharacteristic(charUUID2);
-    if (pRemoteCharacteristic1 == nullptr) {
-      Serial.print("Failed to find our characteristic UUID: ");
+    pRemoteCharacteristic2 = pRemoteService->getCharacteristic(charUUID2);
+    if (pRemoteCharacteristic2 == nullptr) {
+      Serial.print("Failed to find our characteristic 2 UUID: ");
       Serial.println(charUUID2.toString().c_str());
       pClient->disconnect();
       return false;
@@ -88,9 +88,14 @@ bool connectToServer() {
 
     // Read the value of the characteristic.
     if(pRemoteCharacteristic1->canRead()) {
-      std::string value = pRemoteCharacteristic1->readValue();
-      Serial.print("The characteristic value was: ");
-      Serial.println(value.c_str());
+      std::string value1 = pRemoteCharacteristic1->readValue();
+      Serial.print("The characteristic 1 value was: ");
+      Serial.println(value1.c_str());
+    }
+    if(pRemoteCharacteristic2->canRead()) {
+      std::string value2 = pRemoteCharacteristic2->readValue();
+      Serial.print("The characteristic 2 value was: ");
+      Serial.println(value2.c_str());
     }
 
     if(pRemoteCharacteristic1->canNotify())

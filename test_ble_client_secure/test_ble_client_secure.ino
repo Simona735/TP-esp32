@@ -13,12 +13,14 @@ static BLEUUID serviceUUID("4fafc201-1fb5-459e-8fcc-c5c9c331914b");
 // The characteristic of the remote service we are interested in.
 static BLEUUID    charUUID1("11aa358f-9224-46d9-b0f5-3a7ba1ac651e");
 static BLEUUID    charUUID2("aea5483e-36e1-4688-b7f5-ea07361b26a9");
+static BLEUUID    charUUID3("25ed4f18-d8f7-4ba6-a7c1-8edfc852ae8e");
 
 static boolean doConnect = false;
 static boolean connected = false;
 static boolean doScan = false;
 static BLERemoteCharacteristic* pRemoteCharacteristic1;
 static BLERemoteCharacteristic* pRemoteCharacteristic2;
+static BLERemoteCharacteristic* pRemoteCharacteristic3;
 static BLEAdvertisedDevice* myDevice;
 
 static void notifyCallback(
@@ -71,20 +73,28 @@ bool connectToServer() {
     // Obtain a reference to the characteristic in the service of the remote BLE server.
     pRemoteCharacteristic1 = pRemoteService->getCharacteristic(charUUID1);
     if (pRemoteCharacteristic1 == nullptr) {
-      Serial.print("Failed to find our characteristic 1 UUID: ");
+      Serial.print("Failed to find our characteristic UUID1: ");
       Serial.println(charUUID1.toString().c_str());
-      pClient->disconnect();
+      //pClient->disconnect();
       return false;
     }
     Serial.println(" - Found our characteristic 1");
     pRemoteCharacteristic2 = pRemoteService->getCharacteristic(charUUID2);
     if (pRemoteCharacteristic2 == nullptr) {
-      Serial.print("Failed to find our characteristic 2 UUID: ");
+      Serial.print("Failed to find our characteristic UUID2: ");
       Serial.println(charUUID2.toString().c_str());
-      pClient->disconnect();
+      //pClient->disconnect();
       return false;
     }
     Serial.println(" - Found our characteristic 2");
+    pRemoteCharacteristic3 = pRemoteService->getCharacteristic(charUUID3);
+    if (pRemoteCharacteristic3 == nullptr) {
+      Serial.print("Failed to find our characteristic UUID3: ");
+      Serial.println(charUUID3.toString().c_str());
+      //pClient->disconnect();
+      return false;
+    }
+    Serial.println(" - Found our characteristic 3");
 
     // Read the value of the characteristic.
     if(pRemoteCharacteristic1->canRead()) {
@@ -96,6 +106,11 @@ bool connectToServer() {
       std::string value2 = pRemoteCharacteristic2->readValue();
       Serial.print("The characteristic 2 value was: ");
       Serial.println(value2.c_str());
+    }
+    if(pRemoteCharacteristic3->canRead()) {
+      std::string value3 = pRemoteCharacteristic3->readValue();
+      Serial.print("The characteristic 3 value was: ");
+      Serial.println(value3.c_str());
     }
 
     if(pRemoteCharacteristic1->canNotify())
@@ -169,20 +184,13 @@ void loop() {
 
   
   if (connected) {
-    char newValue[300];
-    for(int i = 0; i < 300; i++){
-      newValue[i] = '.';
-      newValue[i]='.';
-    }
-    newValue[0] = 'A';
-    newValue[99] = '1';
-    newValue[199] = '2';
-    newValue[298] = 'Z';
-    newValue[299] = 0; //'\0';
-    Serial.println("Setting new characteristic 1 value:");
-    pRemoteCharacteristic1->writeValue(newValue, 300);
-    newValue[0] = 'B';
-    pRemoteCharacteristic2->writeValue(newValue, 300);
+    
+    Serial.println("Setting new characteristic 1 value");
+    pRemoteCharacteristic1->writeValue(std::string("test1"));
+    Serial.println("Setting new characteristic 2 value");
+    pRemoteCharacteristic2->writeValue(std::string("test2"));
+    Serial.println("Setting new characteristic 3 value");
+    pRemoteCharacteristic3->writeValue(std::string("test3"));
     delay(1000);
     esp_deep_sleep_start();  // turn off ESP32
   }else if(doScan){
