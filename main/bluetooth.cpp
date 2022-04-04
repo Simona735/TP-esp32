@@ -164,6 +164,8 @@ int initBLE(char* sServUUID){
   TPBLEV.pService = TPBLEV.pServer->createService(sServUUID);
   TPBLEV.iNumCharacteristics = 0;
   TPBLEV.pAdvertising = TPBLEV.pServer->getAdvertising();
+  TPBLEV.pSecurity = new BLESecurity();
+  TPBLEV.pSecurity->setAuthenticationMode(ESP_LE_AUTH_BOND);
   return 1;
 }
 
@@ -261,11 +263,11 @@ int hideBLE(){
 
 int blueConfig(int iTimeSecs){
   initBLE(SERVICE_UUID);
-  // MTU by malo byt 4*23
   
   int iState = 0;
   
   BLECharacteristic* opChar = addCharBLE(true, "11aa358f-9224-46d9-b0f5-3a7ba1ac651e", "0", new CallbackUniversal(&iState));
+  opChar->setAccessPermissions(ESP_GATT_PERM_READ_ENCRYPTED | ESP_GATT_PERM_WRITE_ENCRYPTED);
   
   //addCharBLE(true, "0b62f0bc-37b2-4345-973e-3138c37ff4ca", "0", new CallbackCommand());
   //addCharBLE(true, "b81b8cac-7dce-4de0-a568-31b4a0b35816", TPCFG.iUltraCheckIntervalMS, new CallbackConfigSaverInt(&TPCFG.iUltraCheckIntervalMS));

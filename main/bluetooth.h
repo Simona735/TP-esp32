@@ -16,6 +16,7 @@ struct TPBLEVals{
   BLECharacteristic *pCharacteristics[MAXBLECHARACTERISTICS];
   int iNumCharacteristics;
   BLEAdvertising *pAdvertising;
+  BLESecurity *pSecurity;
 };
 
 int initBLE(char* sServUUID);

@@ -28,7 +28,7 @@ void setup() {
   BLEDevice::setMTU(512);
 
   BLESecurity *pSecurity = new BLESecurity();
-  pSecurity->setAuthenticationMode(ESP_LE_AUTH_REQ_SC_MITM_BOND);
+  pSecurity->setAuthenticationMode(ESP_LE_AUTH_BOND);
   
   BLEServer *pServer = BLEDevice::createServer();
   BLEService *pService = pServer->createService(SERVICE_UUID);
