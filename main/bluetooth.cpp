@@ -8,6 +8,7 @@
 #include <BLEServer.h>
 #include "saveload.h"
 #include "settings.h"
+#include "diags.h"
 
 
 
@@ -25,6 +26,7 @@ class CallbackUniversal: public BLECharacteristicCallbacks {
     if(pCharacteristic->getValue().compare("0") == 0){
       return;
     }
+    serialDBGOut("spracovanie vstupu BLE:");
     
     char str[pCharacteristic->getValue().length()+2];
     strcpy(str, pCharacteristic->getValue().c_str());
@@ -35,43 +37,62 @@ class CallbackUniversal: public BLECharacteristicCallbacks {
     //Serial.println(sep);
     
     if(strcmp(str, "WS") == 0){
+      serialDBGOut("WS:");
+      serialDBGOut(sep);
       TPCFG.sWifiSSID = String(sep);
+      
       
     }
     else if(strcmp(str, "WP") == 0){
+      serialDBGOut("WP:");
+      serialDBGOut(sep);
       TPCFG.sWifiPassword = String(sep);
+      
       
     }
     else if(strcmp(str, "FBK") == 0){
+      serialDBGOut("FBK:");
+      serialDBGOut(sep);
       TPCFG.sFBKey = String(sep);
       
     }
     else if(strcmp(str, "FBM") == 0){
+      serialDBGOut("FBM:");
+      serialDBGOut(sep);
       TPCFG.sFBMail = String(sep);
       
     }
     else if(strcmp(str, "FBP") == 0){
+      serialDBGOut("FBP:");
+      serialDBGOut(sep);
       TPCFG.sFBPassword = String(sep);
       
     }
     else if(strcmp(str, "FBI") == 0){
+      serialDBGOut("FBI:");
+      serialDBGOut(sep);
       TPCFG.sFBID = String(sep);
       
     }
     else if(strcmp(str, "FBU") == 0){
+      serialDBGOut("FBU:");
+      serialDBGOut(sep);
       TPCFG.sFBUser = String(sep);
       
     }
     else if(strcmp(str, "+FRST") == 0){
+      serialDBGOut("+FRST");
       eraseSavedConfig();
       ESP.restart();
       
     }
     else if(strcmp(str, "+CONF") == 0){
+      serialDBGOut("+CONF");
       *piState = 2;
       
     }
     else if(strcmp(str, "+TEST") == 0){
+      serialDBGOut("+TEST");
       setDummyCfg(String(sep));
       
     }
@@ -280,7 +301,8 @@ int blueConfig(int iTimeSecs){
   //addCharBLE(true, "9c8657d5-7343-4a1d-a5b8-f5acd689c763", TPCFG.sFBURL, new CallbackConfigSaverString(&TPCFG.sFBURL));
   //addCharBLE(true, "88558ac3-0138-424c-9b4f-460757bcb6ec", TPCFG.sFBMail, new CallbackConfigSaverString(&TPCFG.sFBMail));
   //addCharBLE(true, "820aeda2-1d70-42b9-8831-3b515f88d9a2", TPCFG.sFBPassword, new CallbackConfigSaverString(&TPCFG.sFBPassword));
-  
+
+  serialDBGOut("caka sa na nastavenia cez BLE...");
   
   if(iTimeSecs > 0){
     iTimeSecs = iTimeSecs * 20;

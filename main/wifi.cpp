@@ -8,7 +8,8 @@
 #include <addons/RTDBHelper.h>
 #include "wifi.h"
 #include "settings.h"
-
+#include "diags.h"
+#include "saveload.h"
 
 
 
@@ -19,18 +20,22 @@ FirebaseAuth FBAUTH;
 FirebaseConfig FBCFG;
 
 int wifiConnect(){
+  serialDBGOut("pripajanie k wifi");
   if(WiFi.status() != WL_CONNECTED){
     WiFi.mode(WIFI_STA);
     WiFi.begin(TPCFG.sWifiSSID.c_str(), TPCFG.sWifiPassword.c_str());
     int i;
     for(i=0; i<WIFI_MAX_CONNECT_ATTEMPTS; i++){
       if(WiFi.status() == WL_CONNECTED){
+        serialDBGOut("pripojenie wifi uspesne");
         return 1;
       }
       delay(WIFI_RETRY_CON_DELAY);
     }
+    serialDBGOut("pripojenie k wifi zlyhalo");
     return 0;
   }
+  serialDBGOut("pripojenie k wifi uz je");
   return 1;
 }
 
@@ -150,6 +155,7 @@ bool FBGetJson(const char* path, FirebaseJson* target){
 
 
 int sendNewMailNotif(){
+  serialDBGOut("odosielanie eventu: nova posta");
   if(!wifiConnect()){return 0;}
   FBInit();
   FBConnect();
@@ -171,6 +177,7 @@ int sendNewMailNotif(){
 }
 
 int sendEmptyMailNotif(){
+  serialDBGOut("odosielanie eventu: prazdna posta");
   if(!wifiConnect()){return 0;}
   FBInit();
   FBConnect();
@@ -192,6 +199,7 @@ int sendEmptyMailNotif(){
 }
 
 int sendDeviceFatalError(char* cause){
+  serialDBGOut("odosielanie eventu: fatal error");
   if(!wifiConnect()){return 0;}
   FBInit();
   FBConnect();
@@ -213,24 +221,34 @@ int sendDeviceFatalError(char* cause){
 }
 
 int fetchSettings(){
+  serialDBGOut("stahovanie nastaveni z DB");
   if(!wifiConnect()){return 0;}
   FBInit();
   FBConnect();
   if(FBStatus()){return 0;}
+  int rst = 0;
   char path[MAX_PATH_LENGTH] = "/";
   strncat(path, TPCFG.sFBUser.c_str(), 40);
   strncat(path, "/", 40);
   strncat(path, TPCFG.sFBID.c_str(), 40);
   strncat(path, "/settings/", 40);
   char* path2 = path+strlen(path);
+  strncat(path, "reset", 40);
+  FBGetInt(path, &rst);
+  if(rst == 1){
+    serialDBGOut("vymazanie nastaveni!");
+    eraseSavedConfig();
+    ESP.restart();
+  }
+  memset (path2, 0, 10);
   strncat(path, "UCI", 40);
   FBGetInt(path, &(TPCFG.iUltraCheckInterval));
   memset (path2, 0, 10);
   strncat(path, "UEC", 40);
   FBGetInt(path, &(TPCFG.iUltraExtraChecks));
-  memset (path2, 0, 10);
-  strncat(path, "UECI", 40);
-  FBGetInt(path, &(TPCFG.iUltraExtraChecksIntervalMS));
+  //memset (path2, 0, 10);
+  //strncat(path, "UECI", 40);
+  //FBGetInt(path, &(TPCFG.iUltraExtraChecksIntervalMS));
   memset (path2, 0, 10);
   strncat(path, "UT", 40);
   FBGetFloat(path, &(TPCFG.fUltraTolerance));

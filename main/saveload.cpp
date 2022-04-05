@@ -6,6 +6,7 @@
 #include "settings.h"
 #include <Preferences.h>
 #include <nvs_flash.h>
+#include "diags.h"
 
 
 
@@ -15,6 +16,19 @@ Preferences NVS;
 // nazvy a hodnoty by bolo dobre dat ako #define v separatnom hlavickovom subore
 
 int checkLoadedConfig(){
+  serialDBGOut("kontrola nastaveni:");
+  serialDBGOut(TPCFG.iUltraCheckInterval);
+  serialDBGOut(TPCFG.iUltraExtraChecks);
+  serialDBGOut(TPCFG.iUltraExtraChecksIntervalMS);
+  serialDBGOut(TPCFG.fUltraTolerance);
+  serialDBGOut(TPCFG.sWifiSSID);
+  serialDBGOut(TPCFG.sWifiPassword);
+  serialDBGOut(TPCFG.sFBKey);
+  serialDBGOut(TPCFG.sFBURL);
+  serialDBGOut(TPCFG.sFBMail);
+  serialDBGOut(TPCFG.sFBPassword);
+  serialDBGOut(TPCFG.sFBID);
+  serialDBGOut(TPCFG.sFBUser);
   if(
     TPCFG.iUltraCheckInterval == -1 ||
     TPCFG.iUltraExtraChecks == -1 ||
@@ -29,12 +43,23 @@ int checkLoadedConfig(){
     TPCFG.sFBID == "-1" ||
     TPCFG.sFBUser == "-1"
   ){
+    serialDBGOut("kontrola nastaveni zlyhala!");
     return 0;
   }
+  serialDBGOut("kontrola nastaveni uspesna");
   return 1;
 }
 
 int checkLoadedConfigCritical(){
+  serialDBGOut("kontrola kritickych nastaveni:");
+  serialDBGOut(TPCFG.sWifiSSID);
+  serialDBGOut(TPCFG.sWifiPassword);
+  serialDBGOut(TPCFG.sFBKey);
+  serialDBGOut(TPCFG.sFBURL);
+  serialDBGOut(TPCFG.sFBMail);
+  serialDBGOut(TPCFG.sFBPassword);
+  serialDBGOut(TPCFG.sFBID);
+  serialDBGOut(TPCFG.sFBUser);
   if(
     TPCFG.sWifiSSID == "-1" ||
     TPCFG.sWifiPassword == "-1" ||
@@ -46,7 +71,9 @@ int checkLoadedConfigCritical(){
     TPCFG.sFBUser == "-1"
   ){
     return 0;
+    serialDBGOut("kontrola kritickych nastaveni zlyhala!");
   }
+  serialDBGOut("kontrola kritickych nastaveni uspesna");
   return 1;
 }
 
@@ -69,6 +96,7 @@ int checkLoadedConfigDiag(){
 }
 
 int loadConfig(){
+  serialDBGOut("nacitavanie nastaveni");
 	NVS.begin(NVSNAME, true);       // komentare su uuid pre prisluchajuce charakteristiky BLE
  
   TPCFG.iUltraCheckInterval = NVS.getInt("UCI", -1);                   // b81b8cac-7dce-4de0-a568-31b4a0b35816
@@ -89,6 +117,7 @@ int loadConfig(){
 }
 
 int saveConfig(){
+  serialDBGOut("ukladanie nastaveni");
 	NVS.begin(NVSNAME, false);
   
   NVS.putInt("UCI", TPCFG.iUltraCheckInterval);
@@ -109,6 +138,7 @@ int saveConfig(){
 }
 
 int eraseSavedConfig(){
+  serialDBGOut("vymazanie nastaveni!");
   NVS.begin(NVSNAME, false);
   NVS.clear();
   NVS.end();
@@ -116,6 +146,7 @@ int eraseSavedConfig(){
 }
 
 int wipeFlash(){
+  serialDBGOut("megavymazanie vsetkeho");
   nvs_flash_erase();
   nvs_flash_init();
   return 1;

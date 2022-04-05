@@ -14,6 +14,7 @@
 RTC_DATA_ATTR UltraVals UltraV;    // prezije spanok
 
 void ultraSetEmpty(){
+  serialDBGOut("nastavenie velkosti prazdnej schranky:");
   pinInit();
   int i;
   float x = 0;
@@ -21,23 +22,27 @@ void ultraSetEmpty(){
     x += ultraMeasure1();
   }
   UltraV.fDistEmptyCM1 = x/ULTRA_SET_EMPTY_SAMPLES;
+  serialDBGOut(UltraV.fDistEmptyCM1);
   x = 0;
   delay(ULTRA_SEQUENCE_DELAY);
   for(i = ULTRA_SET_EMPTY_SAMPLES; i!=0; i--){
     x += ultraMeasure2();
   }
   UltraV.fDistEmptyCM2 = x/ULTRA_SET_EMPTY_SAMPLES;
+  serialDBGOut(UltraV.fDistEmptyCM2);
   x = 0;
   delay(ULTRA_SEQUENCE_DELAY);
   for(i = ULTRA_SET_EMPTY_SAMPLES; i!=0; i--){
     x += ultraMeasure3();
   }
   UltraV.fDistEmptyCM3 = x/ULTRA_SET_EMPTY_SAMPLES;
+  serialDBGOut(UltraV.fDistEmptyCM3);
   UltraV.bMailEmpty = true;
   return;
 }
 
 void ultraSetLast(){
+  serialDBGOut("nastavenie momentalnej velkosti schranky:");
   pinInit();
   int i;
   float x = 0;
@@ -45,18 +50,21 @@ void ultraSetLast(){
     x += ultraMeasure1();
   }
   UltraV.fDistLastCM1 = x/ULTRA_SET_EMPTY_SAMPLES;
+  serialDBGOut(UltraV.fDistLastCM1);
   x = 0;
   delay(ULTRA_SEQUENCE_DELAY);
   for(i = ULTRA_SET_EMPTY_SAMPLES; i!=0; i--){
     x += ultraMeasure2();
   }
   UltraV.fDistLastCM2 = x/ULTRA_SET_EMPTY_SAMPLES;
+  serialDBGOut(UltraV.fDistLastCM2);
   x = 0;
   delay(ULTRA_SEQUENCE_DELAY);
   for(i = ULTRA_SET_EMPTY_SAMPLES; i!=0; i--){
     x += ultraMeasure3();
   }
   UltraV.fDistLastCM3 = x/ULTRA_SET_EMPTY_SAMPLES;
+  serialDBGOut(UltraV.fDistLastCM3);
   return;
 }
 
@@ -190,6 +198,7 @@ bool IRCheck4(){
 
 
 int checkMail(){
+  serialDBGOut("kontrola posty");
   pinInit();
   if(UltraV.bMailEmpty){
     if(ultraCheckAllEmpty() || IRCheck4()){
@@ -264,6 +273,7 @@ void setMailEmpty(bool in){
 
 
 void reloadUltraConfigs(){
+  serialDBGOut("refreshnute senzorove nastavenia");
   UltraV.iUltraCheckInterval = TPCFG.iUltraCheckInterval;
   UltraV.iUltraExtraChecks = TPCFG.iUltraExtraChecks;
   UltraV.iUltraExtraChecksIntervalMS = TPCFG.iUltraExtraChecksIntervalMS;

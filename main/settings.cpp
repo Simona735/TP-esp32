@@ -2,6 +2,7 @@
 // nastavenia
 
 #include "settings.h"
+#include "diags.h"
 
 
 
@@ -10,6 +11,7 @@ DeviceConfigs TPCFG;
    //predvolene hodnoty
 
 void setDefaults(){
+  serialDBGOut("nastavenie defaultnych senzorovych nastaveni");
   TPCFG.iUltraCheckInterval = 7000000;          //doba spanku medzi kontrolou posty
   TPCFG.iUltraExtraChecks = 4;            //kolko krat sa pri detekcii posty kontroluje navyse na zabranenie falosnych poplachov
   TPCFG.iUltraExtraChecksIntervalMS = 500;      //cas medzi extra kontrolami
@@ -18,11 +20,13 @@ void setDefaults(){
 }
 
 void setDefaultsWifi(){
+  serialDBGOut("nastavenie defaultnych WiFi nastaveni");
   TPCFG.sWifiSSID = "-1";  // SSID (meno) WiFi
   TPCFG.sWifiPassword = "-1";  // heslo WiFi
 }
 
 void setDefaultsFB(){
+  serialDBGOut("nastavenie defaultnych FB nastaveni");
   TPCFG.sFBKey = "AIzaSyBnvv9CnwggizzoOVf7Pj3-IO_Tv9sMKlo";
   TPCFG.sFBURL = "https://timovy-projekt-97069-default-rtdb.europe-west1.firebasedatabase.app/";
   TPCFG.sFBMail = "-1";   //"acoak@hhh.ck";
@@ -42,11 +46,18 @@ void setDummyCfg(String str){
 }
 
 int pinInit(){
+  serialDBGOut("nastavenie pinov");
   pinMode(TRIGPIN1, OUTPUT);
   pinMode(ECHOPIN1, INPUT);
   pinMode(TRIGPIN2, OUTPUT);
   pinMode(ECHOPIN2, INPUT);
   pinMode(TRIGPIN3, OUTPUT);
   pinMode(ECHOPIN3, INPUT);
+
+  pinMode(IRTRIGPIN, OUTPUT);
+  pinMode(IRPIN1, INPUT);
+  pinMode(IRPIN2, INPUT);
+  pinMode(IRPIN3, INPUT);
+  pinMode(IRPIN4, INPUT);
   return 1;
 }
