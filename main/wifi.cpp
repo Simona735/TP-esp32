@@ -95,6 +95,10 @@ String FBLastError(){
   return FBDATA.errorReason();
 }
 
+bool FBPathExists(const char* path){
+  return Firebase.RTDB.pathExisted(&FBDATA, path);
+}
+
 
 bool FBSetBool(const char* path, bool input){
   return Firebase.RTDB.setBool(&FBDATA, path, input);
@@ -226,13 +230,20 @@ int fetchSettings(){
   FBInit();
   FBConnect();
   if(FBStatus()){return 0;}
-  int rst = 0;
+  //int rst = 0;
   char path[MAX_PATH_LENGTH] = "/";
   strncat(path, TPCFG.sFBUser.c_str(), 40);
   strncat(path, "/", 40);
   strncat(path, TPCFG.sFBID.c_str(), 40);
-  strncat(path, "/settings/", 40);
+  strncat(path, "/settings", 40);
+  if (FBPathExists(path)){
+    serialDBGOut("nenasiel sa priecinok v DB -> factory reset!");
+    eraseSavedConfig();
+    ESP.restart();
+  }
+  strncat(path, "/", 40);
   char* path2 = path+strlen(path);
+  /*
   strncat(path, "reset", 40);
   FBGetInt(path, &rst);
   if(rst == 1){
@@ -241,6 +252,7 @@ int fetchSettings(){
     ESP.restart();
   }
   memset (path2, 0, 10);
+  */
   strncat(path, "UCI", 40);
   FBGetInt(path, &(TPCFG.iUltraCheckInterval));
   memset (path2, 0, 10);
