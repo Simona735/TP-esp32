@@ -8,7 +8,7 @@
 #include "settings.h"
 #include "saveload.h"
 #include "ultra.h"
-#include "diags.h"
+#include "compileswitches.h"
 #include "wifi.h"
 
 RTC_DATA_ATTR UltraVals UltraV;    // prezije spanok
@@ -182,15 +182,15 @@ bool ultraCheckAllNotEmpty(){
   return false;
 }
 
-bool IRCheck4(){
-  digitalWrite(IRTRIGPIN, HIGH);
-  delay(IR_WAIT_TRIG);
-  if(digitalRead(IRPIN1) || digitalRead(IRPIN2) || digitalRead(IRPIN3) || digitalRead(IRPIN4)){
-    digitalWrite(IRTRIGPIN, LOW);
+bool IRCheck3(){
+  //digitalWrite(IRTRIGPIN, HIGH);
+  //delay(IR_WAIT_TRIG);
+  if(!digitalRead(IRPIN1) || !digitalRead(IRPIN2) || !digitalRead(IRPIN3)){
+    //digitalWrite(IRTRIGPIN, LOW);
     return true;
   }
   else{
-    digitalWrite(IRTRIGPIN, LOW);
+    //digitalWrite(IRTRIGPIN, LOW);
     return false;
   }
   
@@ -201,11 +201,11 @@ int checkMail(){
   serialDBGOut("kontrola posty");
   pinInit();
   if(UltraV.bMailEmpty){
-    if(ultraCheckAllEmpty() || IRCheck4()){
+    if(ultraCheckAllEmpty() || IRCheck3()){
       int i;
       for(i=UltraV.iUltraExtraChecks; i!=0; i--){
         delay(UltraV.iUltraExtraChecksIntervalMS);
-        if(!(ultraCheckAllEmpty() || IRCheck4())){
+        if(!(ultraCheckAllEmpty() || IRCheck3())){
           return 0;
         }
       }
@@ -225,20 +225,20 @@ int checkMail(){
     }
   }
   else{
-    if(! IRCheck4()){
+    if(! IRCheck3()){
       if(! ultraCheckAllEmpty()){
         if(!loadConfig()){
-        serialDBGOut("C1 : Chyba pri nacitani nastaveni");
-        esp_deep_sleep(FATAL_ERROR_RESET_TIME);
-      }
-      if(!wifiConnect()){
-        serialDBGOut("pripojenie wifi zlyhalo");
-        return 0;
+          serialDBGOut("C1 : Chyba pri nacitani nastaveni");
+          esp_deep_sleep(FATAL_ERROR_RESET_TIME);
+        }
+        if(!wifiConnect()){
+          serialDBGOut("pripojenie wifi zlyhalo");
+          return 0;
         
-      }
-      sendEmptyMailNotif();
-      UltraV.bMailEmpty = true;
-      return 1;
+        }
+        sendEmptyMailNotif();
+        UltraV.bMailEmpty = true;
+        return 1;
       }
     }
     if(ultraCheckAllNotEmpty()){
@@ -266,6 +266,72 @@ int checkMail(){
   return 0;
 }
 
+int checkMailNoIR(){
+  serialDBGOut("kontrola posty - bez IR");
+  pinInit();
+  if(UltraV.bMailEmpty){
+    if(ultraCheckAllEmpty()){
+      int i;
+      for(i=UltraV.iUltraExtraChecks; i!=0; i--){
+        delay(UltraV.iUltraExtraChecksIntervalMS);
+        if(!(ultraCheckAllEmpty())){
+          return 0;
+        }
+      }
+      if(!loadConfig()){
+        serialDBGOut("C1 : Chyba pri nacitani nastaveni");
+        esp_deep_sleep(FATAL_ERROR_RESET_TIME);
+      }
+      if(!wifiConnect()){
+        serialDBGOut("pripojenie wifi zlyhalo");
+        return 0;
+        
+      }
+      sendNewMailNotif();
+      ultraSetLast();
+      UltraV.bMailEmpty = false;
+      return 1;
+    }
+  }
+  else{
+      if(! ultraCheckAllEmpty()){
+        if(!loadConfig()){
+          serialDBGOut("C1 : Chyba pri nacitani nastaveni");
+          esp_deep_sleep(FATAL_ERROR_RESET_TIME);
+        }
+        if(!wifiConnect()){
+          serialDBGOut("pripojenie wifi zlyhalo");
+          return 0;
+        
+        }
+        sendEmptyMailNotif();
+        UltraV.bMailEmpty = true;
+        return 1;
+      }
+    if(ultraCheckAllNotEmpty()){
+      int i;
+      for(i=UltraV.iUltraExtraChecks; i!=0; i--){
+        delay(UltraV.iUltraExtraChecksIntervalMS);
+        if(! ultraCheckAllNotEmpty()){
+          return 0;
+        }
+      }
+      if(!loadConfig()){
+        serialDBGOut("C1 : Chyba pri nacitani nastaveni");
+        esp_deep_sleep(FATAL_ERROR_RESET_TIME);
+      }
+      if(!wifiConnect()){
+        serialDBGOut("pripojenie wifi zlyhalo");
+        return 0;
+        
+      }
+      sendNewMailNotif();
+      ultraSetLast();
+      return 1;
+    }
+  }
+  return 0;
+}
 
 void setMailEmpty(bool in){
   UltraV.bMailEmpty = in;

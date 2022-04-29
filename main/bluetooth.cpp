@@ -8,7 +8,7 @@
 #include <BLEServer.h>
 #include "saveload.h"
 #include "settings.h"
-#include "diags.h"
+#include "compileswitches.h"
 
 
 

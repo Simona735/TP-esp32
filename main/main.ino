@@ -8,7 +8,7 @@
 #include "wifi.h"
 #include "ultra.h"
 #include <rom/rtc.h>
-#include "diags.h"
+#include "compileswitches.h"
 
 
 
@@ -43,7 +43,7 @@ void setup() {
       serialDBGOut("ziadne stahovanie");
       iCycle++;
     }
-    checkMail();
+    CHECK_MAIL();
     
   }
   else if(rtc_get_reset_reason(0)==1 || rtc_get_reset_reason(0)==12)     // STANDARDNY RESET (odpojenie napajania alebo softverovy reset)

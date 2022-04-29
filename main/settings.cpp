@@ -2,7 +2,7 @@
 // nastavenia
 
 #include "settings.h"
-#include "diags.h"
+#include "compileswitches.h"
 
 
 
@@ -14,7 +14,7 @@ void setDefaults(){
   serialDBGOut("nastavenie defaultnych senzorovych nastaveni");
   TPCFG.iUltraCheckInterval = 7000000;          //doba spanku medzi kontrolou posty
   TPCFG.iUltraExtraChecks = 4;            //kolko krat sa pri detekcii posty kontroluje navyse na zabranenie falosnych poplachov
-  TPCFG.iUltraExtraChecksIntervalMS = 500;      //cas medzi extra kontrolami
+  TPCFG.iUltraExtraChecksIntervalMS = 2000;      //cas medzi extra kontrolami
   TPCFG.fUltraTolerance = 0.1;              //tolerancia/citlivost ultrazvukoveho senzora, mensie znamena citlivejsie, minimum/default = 0
   
 }
@@ -54,10 +54,9 @@ int pinInit(){
   pinMode(TRIGPIN3, OUTPUT);
   pinMode(ECHOPIN3, INPUT);
 
-  pinMode(IRTRIGPIN, OUTPUT);
   pinMode(IRPIN1, INPUT);
   pinMode(IRPIN2, INPUT);
   pinMode(IRPIN3, INPUT);
-  pinMode(IRPIN4, INPUT);
+ 
   return 1;
 }

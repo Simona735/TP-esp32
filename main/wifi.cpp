@@ -8,7 +8,7 @@
 #include <addons/RTDBHelper.h>
 #include "wifi.h"
 #include "settings.h"
-#include "diags.h"
+#include "compileswitches.h"
 #include "saveload.h"
 
 

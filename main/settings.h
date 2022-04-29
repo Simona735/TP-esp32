@@ -5,17 +5,15 @@
 
 
 // natvrdo nastavene hodnoty
-#define TRIGPIN1 12
-#define ECHOPIN1 13
-#define TRIGPIN2 12
-#define ECHOPIN2 13
-#define TRIGPIN3 12
-#define ECHOPIN3 13
-#define IRTRIGPIN 2
-#define IRPIN1 4
-#define IRPIN2 4
-#define IRPIN3 4
-#define IRPIN4 4
+#define TRIGPIN1 13
+#define ECHOPIN1 15
+#define TRIGPIN2 13
+#define ECHOPIN2 0
+#define TRIGPIN3 13
+#define ECHOPIN3 4
+#define IRPIN1 12
+#define IRPIN2 14
+#define IRPIN3 16
 #define WIFI_CRED_LENGTH 30
 #define NVSNAME "MAILBOX"
 #define SOUND_SPEED 0.017

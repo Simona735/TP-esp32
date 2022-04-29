@@ -6,7 +6,7 @@
 #include "settings.h"
 #include <Preferences.h>
 #include <nvs_flash.h>
-#include "diags.h"
+#include "compileswitches.h"
 
 
 
