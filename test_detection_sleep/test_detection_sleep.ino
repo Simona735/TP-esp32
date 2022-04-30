@@ -1,5 +1,5 @@
 
-// TEST DETEKCIE POSTY
+// TEST DETEKCIE POSTY (so spankom)
 // kopia funkcii na detekciu posty z hlavnej (main) casti projektu
 // ostatne funkcie (loadConfig(), wifiConnect(), atd...) nic nerobia, iba sa tvaria ze funguju
 
@@ -9,6 +9,7 @@
 // funkcie "Empty" su pre stav, ked je postova schranka prazdna, "NotEmpty" sa pouzivaju ked uz bola odoslana notifikacia a kontroluje sa pritomnost dalsej posty
 
 #include <Arduino.h>
+#include <rom/rtc.h>
 
 #define serialDBGOut(a); Serial.println(a);
 #define DBG_SERIAL_BEGIN; Serial.begin(115200);
@@ -122,7 +123,7 @@ int pinInit(){
 
 void setDefaults(){
   serialDBGOut("nastavenie defaultnych senzorovych nastaveni");
-  UltraV.iUltraCheckInterval = 7000000;          //doba spanku medzi kontrolou posty
+  UltraV.iUltraCheckInterval = 300000000;          //doba spanku medzi kontrolou posty
   UltraV.iUltraExtraChecks = 4;            //kolko krat sa pri detekcii posty kontroluje navyse na zabranenie falosnych poplachov
   UltraV.iUltraExtraChecksIntervalMS = 500;      //cas medzi extra kontrolami
   UltraV.fUltraTolerance = 0.1;              //tolerancia/citlivost ultrazvukoveho senzora, mensie znamena citlivejsie, minimum/default = 0
@@ -473,15 +474,20 @@ void setMailEmpty(bool in){
 
 void setup(){
   Serial.begin(115200);
-  Serial.println("start");
-  setDefaults();
-  pinInit();
-  delay(5000);
-  ultraSetEmpty();
+  if(rtc_get_reset_reason(0)==5){
+    //checkMail();
+    checkMailNoIR();
+  }
+  else{
+    Serial.println("start");
+    setDefaults();
+    pinInit();
+    delay(5000);
+    ultraSetEmpty();
+  }
+  esp_deep_sleep(UltraV.iUltraCheckInterval);
 }
 
 void loop(){
-  delay(5000);
-  //checkMail();
-  checkMailNoIR();
+  
 }
