@@ -180,7 +180,7 @@ class CallbackConfigSaverFloat: public BLECharacteristicCallbacks {
 
 
 int initBLE(char* sServUUID){
-  BLEDevice::init("MailBox");
+  BLEDevice::init(BLENAME);
   TPBLEV.pServer = BLEDevice::createServer();
   TPBLEV.pService = TPBLEV.pServer->createService(sServUUID);
   TPBLEV.iNumCharacteristics = 0;

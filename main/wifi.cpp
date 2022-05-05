@@ -21,6 +21,26 @@ FirebaseConfig FBCFG;
 
 int wifiConnect(){
   serialDBGOut("pripajanie k wifi");
+  WiFi.disconnect();
+  delay(2000);
+    WiFi.mode(WIFI_STA);
+    WiFi.begin(TPCFG.sWifiSSID.c_str(), TPCFG.sWifiPassword.c_str());
+    delay(2000);
+    int i;
+    for(i=0; i<WIFI_MAX_CONNECT_ATTEMPTS; i++){
+      if(WiFi.status() == WL_CONNECTED){
+        serialDBGOut("pripojenie wifi uspesne");
+        return 1;
+      }
+      delay(WIFI_RETRY_CON_DELAY);
+    }
+    serialDBGOut("pripojenie k wifi zlyhalo");
+    return 0;
+
+}
+
+int wifiConnect2(){
+  serialDBGOut("pripajanie k wifi");
   if(WiFi.status() != WL_CONNECTED){
     WiFi.mode(WIFI_STA);
     WiFi.begin(TPCFG.sWifiSSID.c_str(), TPCFG.sWifiPassword.c_str());
@@ -38,7 +58,6 @@ int wifiConnect(){
   serialDBGOut("pripojenie k wifi uz je");
   return 1;
 }
-
 
 String wifiHTTPGet(String url){
   if(WiFi.status()== WL_CONNECTED){
@@ -63,6 +82,11 @@ String wifiHTTPGet(String url){
     return "wifi not connected";
 }
 
+int wifiDisconnect(){
+  WiFi.disconnect();
+  return 1;
+}
+
 int FBInit(){
   FBCFG.api_key = TPCFG.sFBKey;
   FBCFG.database_url = TPCFG.sFBURL;
@@ -76,6 +100,11 @@ int FBConnect(){
   Firebase.begin(&FBCFG, &FBAUTH);
   Firebase.setDoubleDigits(5);
 
+  return 1;
+}
+
+int FBDisconnect(){
+  Firebase.RTDB.end(&FBDATA);
   return 1;
 }
 
@@ -170,6 +199,8 @@ int sendNewMailNotif(){
   strncat(path, TPCFG.sFBID.c_str(), 40);
   strncat(path, "/events/LastMsgTime", 40);
   FBSetTimestampNow(path);
+  serialDBGOut(path);
+  serialDBGOut(FBDATA.errorReason().c_str());
   memset(path, 0, MAX_PATH_LENGTH);
   strncat(path, "/", 40);
   strncat(path, TPCFG.sFBUser.c_str(), 40);
@@ -177,6 +208,10 @@ int sendNewMailNotif(){
   strncat(path, TPCFG.sFBID.c_str(), 40);
   strncat(path, "/events/NewMail",40);
   FBSetBool(path, true);
+  serialDBGOut(path);
+  serialDBGOut(FBDATA.errorReason().c_str());
+  FBDisconnect();
+  wifiDisconnect();
   return 1;
 }
 
@@ -192,6 +227,8 @@ int sendEmptyMailNotif(){
   strncat(path, TPCFG.sFBID.c_str(), 40);
   strncat(path, "/events/LastMsgTime", 40);
   FBSetTimestampNow(path);
+  serialDBGOut(path);
+  serialDBGOut(FBDATA.errorReason().c_str());
   memset(path, 0, MAX_PATH_LENGTH);
   strncat(path, "/", 40);
   strncat(path, TPCFG.sFBUser.c_str(), 40);
@@ -199,6 +236,10 @@ int sendEmptyMailNotif(){
   strncat(path, TPCFG.sFBID.c_str(), 40);
   strncat(path, "/events/EmptyBox",40);
   FBSetBool(path, true);
+  serialDBGOut(path);
+  serialDBGOut(FBDATA.errorReason().c_str());
+  FBDisconnect();
+  wifiDisconnect();
   return 1;
 }
 
@@ -214,6 +255,8 @@ int sendDeviceFatalError(char* cause){
   strncat(path, TPCFG.sFBID.c_str(), 40);
   strncat(path, "/events/LastMsgTime", 40);
   FBSetTimestampNow(path);
+  serialDBGOut(path);
+  serialDBGOut(FBDATA.errorReason().c_str());
   memset(path, 0, MAX_PATH_LENGTH);
   strncat(path, "/", 40);
   strncat(path, TPCFG.sFBUser.c_str(), 40);
@@ -221,6 +264,10 @@ int sendDeviceFatalError(char* cause){
   strncat(path, TPCFG.sFBID.c_str(), 40);
   strncat(path, "/events/FatalError",40);
   FBSetBool(path, true);
+  serialDBGOut(path);
+  serialDBGOut(FBDATA.errorReason().c_str());
+  FBDisconnect();
+  wifiDisconnect();
   return 1;
 }
 
@@ -236,13 +283,18 @@ int fetchSettings(){
   strncat(path, "/", 40);
   strncat(path, TPCFG.sFBID.c_str(), 40);
   strncat(path, "/settings", 40);
-  if (FBPathExists(path)){
+  /*
+  if (!FBPathExists(path)){
     serialDBGOut("nenasiel sa priecinok v DB -> factory reset!");
+    serialDBGOut(path);
+    serialDBGOut(FBDATA.errorReason().c_str());
     eraseSavedConfig();
     ESP.restart();
   }
+  */
   strncat(path, "/", 40);
   char* path2 = path+strlen(path);
+  
   /*
   strncat(path, "reset", 40);
   FBGetInt(path, &rst);
@@ -255,15 +307,33 @@ int fetchSettings(){
   */
   strncat(path, "UCI", 40);
   FBGetInt(path, &(TPCFG.iUltraCheckInterval));
+  serialDBGOut(path);
+  serialDBGOut(FBDATA.errorReason().c_str());
   memset (path2, 0, 10);
   strncat(path, "UEC", 40);
   FBGetInt(path, &(TPCFG.iUltraExtraChecks));
+  serialDBGOut(path);
+  serialDBGOut(FBDATA.errorReason().c_str());
   //memset (path2, 0, 10);
   //strncat(path, "UECI", 40);
   //FBGetInt(path, &(TPCFG.iUltraExtraChecksIntervalMS));
   memset (path2, 0, 10);
   strncat(path, "UT", 40);
   FBGetFloat(path, &(TPCFG.fUltraTolerance));
+  serialDBGOut(path);
+  serialDBGOut(FBDATA.errorReason().c_str());
   //memset (path2, 0, 10);
+
+  if (strcmp(FBDATA.errorReason().c_str(), "path not exist") == 0){
+    serialDBGOut("nenasiel sa priecinok v DB -> factory reset!");
+    serialDBGOut(path);
+    serialDBGOut(FBDATA.errorReason().c_str());
+    FBDisconnect();
+    wifiDisconnect();
+    eraseSavedConfig();
+    ESP.restart();
+  }
+  FBDisconnect();
+  wifiDisconnect();
   return 1;
 }

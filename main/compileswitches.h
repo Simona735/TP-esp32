@@ -2,7 +2,7 @@
 #define TPCOMPILEDEBUG
 
 // zakomentovanie nasledujuceho riadku vypne pouzivanie IR senzorov
-#define TPENABLEIR
+//#define TPENABLEIR
 
 
 

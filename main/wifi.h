@@ -17,8 +17,10 @@ extern FirebaseConfig FBCFG;
 
 int wifiConnect();
 String wifiHTTPGet(String url);
+int wifiDisconnect();
 int FBInit();
 int FBConnect();
+int FBDisconnect();
 int FBStatus();         //vrati stav pripojenia s FB, 0 == OK
 String FBLastError();
 bool FBPathExists(const char* path);
